@@ -204,6 +204,11 @@ fn stop_scan(hub: State<'_, Shared>) {
     h.scan = json!({ "state": "stopped" });
 }
 
+#[tauri::command]
+fn app_version(app: tauri::AppHandle) -> String {
+    app.package_info().version.to_string()
+}
+
 /// The app UI language ("ru" / "en"); the extension popup follows it.
 #[tauri::command]
 fn set_lang(lang: String, hub: State<'_, Shared>) {
@@ -366,6 +371,7 @@ pub fn run() {
             stop_scan,
             get_live,
             set_lang,
+            app_version,
             open_collector_folder,
             open_higgsfield,
             save_receipt_pdf,

@@ -32,7 +32,7 @@ function qrPath(text) {
 const STORE = 'tokenstab.v1';
 const CATALOG_DATE = Date.UTC(2026, 9, 16);
 const SAMPLE_CLIENT = { ru: 'Студия «Север»', en: 'North Studio' };
-const KEEP = ['theme', 'lang', 'cur', 'fx', 'items', 'client', 'markup', 'markupMax', 'plan', 'brand', 'sign', 'saved', 'no', 'remind', 'priceTs', 'pinned', 'live', 'liveTs', 'changesList'];
+const KEEP = ['theme', 'lang', 'cur', 'fx', 'items', 'client', 'markup', 'tax', 'markupMax', 'plan', 'brand', 'sign', 'saved', 'no', 'remind', 'priceTs', 'pinned', 'live', 'liveTs', 'changesList'];
 const tauri = () => window.__TAURI__;
 const tauriWin = () => tauri() && tauri().window && tauri().window.getCurrentWindow();
 const invoke = (cmd, args) => (tauri() && tauri().core ? tauri().core.invoke(cmd, args) : Promise.reject(new Error('no-backend')));
@@ -102,12 +102,21 @@ class App extends Design {
     const w = tauriWin(); if (w) w.setAlwaysOnTop(!!this.state.pinned).catch(() => {});
     this.poll();
     this._poll = setInterval(() => this.poll(), 2000);
+    invoke('app_version').then((v) => this.setState({ appVer: v })).catch(() => {});
     this._upd0 = setTimeout(() => this.checkUpdate(), 6000);
     this._upd = setInterval(() => this.checkUpdate(), 6 * 3600e3);
   }
-  checkUpdate() {
+  checkUpdate(manual) {
     if (!CONFIGURED) return;
-    invoke('check_update').then((u) => { if (u && u.version) this.setState({ updVersion: u.version }); }).catch(() => {});
+    if (manual) this.setState({ updChecking: true });
+    invoke('check_update').then((u) => {
+      this.setState({ updChecking: false, updChecked: Date.now() });
+      if (u && u.version) this.setState(manual ? { updVersion: u.version, updDismissed: null } : { updVersion: u.version });
+      else if (manual) this.showToast(this.ru() ? 'У вас последняя версия' : 'You have the latest version');
+    }).catch(() => {
+      this.setState({ updChecking: false });
+      if (manual) this.showToast(this.ru() ? 'Не удалось проверить обновления — нет интернета?' : 'Could not check for updates — offline?');
+    });
   }
   // Build the shareable link (and its QR) whenever a receipt is shown.
   refreshLink() {
@@ -262,8 +271,15 @@ class App extends Design {
       later: () => this.setState({ updDismissed: s.updVersion }),
       install: () => { this.setState({ updBusy: true }); invoke('install_update').catch(() => { this.setState({ updBusy: false }); toast(ru ? 'Не удалось установить обновление' : 'Update failed'); }); }
     };
+    const ver = {
+      title: 'TokensTab ' + (s.appVer || ''),
+      note: s.updVersion && s.updVersion !== s.appVer ? (ru ? 'Доступна версия ' : 'Available: ') + s.updVersion : (ru ? 'Обновления ставятся сами — проверка при запуске и раз в 6 часов' : 'Updates install themselves — checked on start and every 6 hours'),
+      label: s.updChecking ? (ru ? 'Проверяю…' : 'Checking…') : (ru ? 'Проверить' : 'Check now'),
+      busy: !!s.updChecking,
+      check: () => this.checkUpdate(true)
+    };
     return {
-      ext, qr, upd,
+      ext, qr, upd, ver,
       sendTg: () => this.shareTelegram(),
       sendLink: () => this.copyLink(),
       sendPng: () => this.savePdf(),
