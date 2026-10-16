@@ -1,0 +1,9 @@
+# build output and dependencies
+node_modules/
+app/src-tauri/target/
+app/src-tauri/gen/
+/release/
+app/build.log
+# working material that stays local
+/research/
+/design/

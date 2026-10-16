@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "TokensTab",
+  "version": "0.1.0",
+  "identifier": "app.tokenstab.desktop",
+  "build": {
+    "frontendDist": "../src",
+    "beforeBuildCommand": "node tools/configure-release.js && node tools/build-ui.js && node tools/build-viewer.js",
+    "beforeDevCommand": "node tools/configure-release.js && node tools/build-ui.js && node tools/build-viewer.js"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "TokensTab",
+        "width": 420,
+        "height": 800,
+        "resizable": false,
+        "maximizable": false,
+        "decorations": false,
+        "alwaysOnTop": true,
+        "center": true,
+        "backgroundColor": "#E9F0EE"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; script-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "shortDescription": "Калькулятор кредитов Higgsfield",
+    "windows": {
+      "nsis": {
+        "languages": [
+          "Russian",
+          "English"
+        ]
+      }
+    },
+    "resources": {
+      "../../extension/": "collector/"
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdBQ0YzNzgxNjlBOTQ4MjAKUldRZ1NLbHBnVGZQZXNvUjdKS1ZzRkFOZ1RETU9FU3Y0MGtzcmp2dEVma2J6OWJaNzduaS91SXoK",
+      "endpoints": [
+        "https://github.com/tulerpeton-core/tokenstab/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  }
+}

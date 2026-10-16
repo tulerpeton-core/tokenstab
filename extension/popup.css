@@ -1,0 +1,29 @@
+body { margin: 0; width: 360px; background: #E9F0EE; color: #16203A; font-family: 'Onest', 'Segoe UI', system-ui, sans-serif; font-size: 14px; }
+.wrap { box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.head { display: flex; align-items: center; gap: 10px; padding: 2px 4px; }
+.head img { border-radius: 7px; }
+.brand { display: flex; flex-direction: column; }
+.brand b { font-size: 16px; font-weight: 600; }
+.brand small, .row small { font-size: 12px; color: #5A6478; }
+.card { border-radius: 24px; background: #FAFCFB; }
+.checks { padding: 6px 16px; }
+.row { min-height: 50px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(22,32,58,0.08); }
+.row:last-child { border-bottom: 0; }
+.row > span:last-child { display: flex; flex-direction: column; gap: 1px; }
+.row b { font-size: 14px; font-weight: 500; }
+.dot { width: 28px; height: 28px; flex: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: #FFE6D6; color: #B4532A; }
+.dot.ok { background: #C8F25C; color: #16203A; }
+.main { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+h1 { margin: 0; font-size: 18px; font-weight: 600; }
+#text { margin: 0; font-size: 13px; line-height: 1.45; color: #5A6478; }
+.progline { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; margin-bottom: 6px; }
+.bar { height: 8px; border-radius: 4px; background: #EEF3F1; overflow: hidden; }
+.bar span { display: block; height: 100%; width: 0; border-radius: 4px; background: linear-gradient(90deg, #3A64AE, #5B8DEF 60%, #C8F25C); transition: width .3s ease; }
+.warn { margin: 0; padding: 10px 12px; border-radius: 14px; background: #FFE6D6; color: #8A3A12; font-size: 13px; line-height: 1.4; }
+.btns { display: flex; gap: 8px; margin-top: 4px; }
+button { font: inherit; cursor: pointer; height: 46px; border: 0; border-radius: 23px; font-size: 15px; }
+button:focus-visible { outline: 2px solid #5B8DEF; outline-offset: 2px; }
+.primary { flex: 1; background: #C8F25C; color: #16203A; font-weight: 600; }
+.primary.quiet, .secondary { background: #EEF3F1; color: #16203A; font-weight: 500; }
+.secondary { padding: 0 18px; }
+.foot { margin: 0 4px; font-size: 11px; line-height: 1.45; color: #5A6478; }

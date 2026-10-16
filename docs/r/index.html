@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Счёт</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="./app.css" rel="stylesheet">
+<style>
+html, body { margin: 0; background: #E9F0EE; color: #16203A; font-family: 'Onest', 'Segoe UI', sans-serif; }
+.page { min-height: 100vh; box-sizing: border-box; padding: 32px 16px 48px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+#receipt { width: 356px; max-width: 100%; }
+#save { height: 48px; padding: 0 28px; border: 0; border-radius: 24px; background: #C8F25C; color: #16203A; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.made { font-size: 12px; color: #5A6478; }
+@media print { body { background: #fff; } .page { padding: 0; min-height: 0; } #save, .made { display: none; } article { filter: none !important; animation: none !important; } @page { margin: 0; } }
+</style>
+</head>
+<body>
+<main class="page">
+<div id="receipt"></div>
+<button id="save" type="button">Сохранить PDF</button>
+<span class="made">TokensTab · калькулятор генераций Higgsfield</span>
+</main>
+<script type="module" src="./viewer.js"></script>
+</body>
+</html>
