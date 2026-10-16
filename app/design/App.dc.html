@@ -656,14 +656,14 @@ return g;
 gross(st) { const t = Math.max(0, Math.min(90, st.tax || 0)); return 1 / (1 - t / 100); }
 calc(st) {
 const r = this.rate(st);
-const m = (1 + st.markup / 100) * this.gross(st);
+const m = 1 + st.markup / 100, g = this.gross(st);
 let credits = 0, total = 0, unlimCr = 0;
 st.items.forEach((it) => {
 const md = this.mOf(it); const p = this.params(it);
 const u = this.unitCr(md, it.kind, p);
 if (md && md.free) { total += this.unitC((p.own || 0)) * it.qty; return; }
-if (md && this.isUnlim(md, it.kind, p)) { unlimCr += u * it.qty; total += this.unitC(u * r * m) * it.qty; return; }
-credits += u * it.qty; total += this.unitC(u * r * m) * it.qty;
+if (md && this.isUnlim(md, it.kind, p)) { unlimCr += u * it.qty; total += this.unitT(u * r * m, g) * it.qty; return; }
+credits += u * it.qty; total += this.unitT(u * r * m, g) * it.qty;
 });
 const cost = credits * r;
 const tax = total * (st.tax || 0) / 100;
@@ -672,7 +672,7 @@ return { credits: this.r2(credits + unlimCr), cost: cost, total: total, tax: tax
 money(v) {
 const lang = this._lang || 'ru', cur = this._cur || 'USD';
 const fx = (this._fx && this._fx[cur]) || 1;
-const dg = cur === 'RUB' ? 0 : 2;
+const dg = cur === 'RUB' ? (Math.round(Math.abs(v * fx) * 100) % 100 ? 2 : 0) : 2;
 const en = cur === 'USD' || lang === 'en';
 const num = (v * fx).toLocaleString(en ? 'en-US' : 'ru-RU', { minimumFractionDigits: dg, maximumFractionDigits: dg });
 const sym = { USD: '$', EUR: '€', RUB: '₽' }[cur];
@@ -680,6 +680,13 @@ const i = dg ? num.lastIndexOf(en ? '.' : ',') : num.length;
 return { s: en ? sym + num : num + ' ' + sym, main: (en ? sym : '') + num.slice(0, i), tail: num.slice(i) + (en ? '' : ' ' + sym) };
 }
 m$(v) { return this.money(v).s; }
+// Unit price with tax: the marked-up unit price is rounded as usual, then grossed up to the cent (312 ÷ 0.94, not 14 ₽ × 24).
+unitT(usd, g) {
+const n = this.unitC(usd);
+if (!g || g === 1) return n;
+const fx = (this._fx && this._fx[this._cur || 'USD']) || 1;
+return Math.round(n * fx * g * 100) / 100 / fx;
+}
 unitC(usd) {
 const cur = this._cur || 'USD';
 const fx = (this._fx && this._fx[cur]) || 1;
@@ -694,7 +701,7 @@ items: st.items.filter(function (it) { return it.qty > 0; }).map(function (it) {
 };
 }
 rcView(h, L) {
-const m = (1 + h.markup / 100) * this.gross(h);
+const m = 1 + h.markup / 100, g = this.gross(h);
 const keys = ['video', 'photo', 'audio'];
 const labels = { video: L.grpVideo, photo: L.grpPhoto, audio: L.grpAudio };
 let total = 0;
@@ -704,7 +711,7 @@ if (!its.length) return null;
 let sub = 0;
 const lines = its.map((it) => {
 const md = this.mOf(it); const p = this.params(it);
-const u = md && md.free ? this.unitC(p.own || 0) : this.unitC(this.unitCr(md, k, p) * h.rate * m);
+const u = md && md.free ? this.unitC(p.own || 0) : this.unitT(this.unitCr(md, k, p) * h.rate * m, g);
 sub += u * it.qty;
 const name = k === 'video' ? L.vName(p.dur, p.res) : (k === 'photo' ? L.pName(p.res, p.q) : L.aName(this.fc(p.chars)));
 return { name: name, detail: (md ? md.name : '') + ' · ' + it.qty + ' × ' + this.m$(u), sum: this.m$(u * it.qty) };
@@ -826,7 +833,7 @@ const tm = this.money(shown);
 const finalLen = this.m$(c.total).length;
 const totalSize = finalLen <= 7 ? 40 : (finalLen <= 10 ? 32 : 24);
 const rate = this.rate(s);
-const mk = (1 + s.markup / 100) * this.gross(s);
+const mk = 1 + s.markup / 100, gk = this.gross(s);
 const cat = this.catalog();
 const setItem = (id, patch) => this.setState(function (st) { return { items: st.items.map(function (it) { return it.id === id ? Object.assign({}, it, patch) : it; }) }; });
 const setQty = (id, v) => setItem(id, { qty: Math.max(1, v) });
@@ -895,7 +902,7 @@ const unit = this.unitCr(am, s.addTab, ap);
 const bef = this.beforeCr(am, s.addTab, ap);
 const unlim = this.isUnlim(am, s.addTab, ap);
 const addNote = am.free ? L.freeNote : (unlim ? L.unlimNote : (bef && bef > unit ? L.promoNote(this.fc(unit), this.fc(bef)) : ''));
-const clientUnit = am.free ? this.unitC(ap.own || 0) : this.unitC(unit * rate * mk);
+const clientUnit = am.free ? this.unitC(ap.own || 0) : this.unitT(unit * rate * mk, gk);
 const addItem = () => {
 const q = Math.max(1, s.addQty);
 const same = function (it) { return it.mid === am.id && it.kind === s.addTab && it.res === ap.res && it.q === ap.q && it.dur === ap.dur && it.chars === ap.chars && it.own === ap.own; };

@@ -32,6 +32,8 @@ function qrPath(text) {
 const STORE = 'tokenstab.v1';
 const CATALOG_DATE = Date.UTC(2026, 9, 16);
 const SAMPLE_CLIENT = { ru: 'Студия «Север»', en: 'North Studio' };
+// The sample client name in the other language, if the user has not typed a real one yet.
+const sampleFor = (st) => (st.client === SAMPLE_CLIENT.ru || st.client === SAMPLE_CLIENT.en) && st.client !== SAMPLE_CLIENT[st.lang] ? SAMPLE_CLIENT[st.lang] : null;
 const KEEP = ['theme', 'lang', 'cur', 'fx', 'items', 'client', 'markup', 'tax', 'markupMax', 'plan', 'brand', 'sign', 'saved', 'no', 'remind', 'priceTs', 'pinned', 'live', 'liveTs', 'changesList'];
 const tauri = () => window.__TAURI__;
 const tauriWin = () => tauri() && tauri().window && tauri().window.getCurrentWindow();
@@ -84,6 +86,7 @@ class App extends Design {
     // First start: Windows language decides; afterwards the saved choice.
     if (saved.lang === undefined) this.state.lang = /^ru|^uk|^be|^kk/i.test(navigator.language || '') ? 'ru' : 'en';
     if (saved.client === undefined) this.state.client = SAMPLE_CLIENT[this.state.lang];
+    this.state.client = sampleFor(this.state) || this.state.client;
     if (!this.state.priceTs) this.state.priceTs = CATALOG_DATE;
     if (this.state.pinned == null) this.state.pinned = true;
     this.state.days = Math.max(0, Math.floor((Date.now() - this.state.priceTs) / 864e5));
@@ -179,6 +182,9 @@ class App extends Design {
   }
   componentDidUpdate(prevProps, prevState) {
     if (super.componentDidUpdate) super.componentDidUpdate(prevProps, prevState);
+    // The sample client name follows the language (header button or Prices) until the user types a real one.
+    const sample = sampleFor(this.state);
+    if (sample) this.setState({ client: sample });
     this.refreshLink();
     const data = {};
     for (const k of KEEP) data[k] = this.state[k];
@@ -286,11 +292,7 @@ class App extends Design {
       changes: s.changesList || v.changes,
       langShort: ru ? 'RU' : 'EN',
       langSwitchAria: ru ? 'Switch to English' : 'Переключить на русский',
-      toggleLang: () => {
-        const lang = ru ? 'en' : 'ru';
-        // The sample client name follows the language until the user types a real one.
-        this.setState(s.client === SAMPLE_CLIENT[s.lang] ? { lang, client: SAMPLE_CLIENT[lang] } : { lang });
-      },
+      toggleLang: () => this.setState({ lang: ru ? 'en' : 'ru' }),
       pinPressed: String(!!s.pinned),
       winPin: () => { const p = !s.pinned; this.setState({ pinned: p }); const w = tauriWin(); if (w) w.setAlwaysOnTop(p).catch(() => {}); },
       winMin: () => { const w = tauriWin(); if (w) w.minimize(); },
