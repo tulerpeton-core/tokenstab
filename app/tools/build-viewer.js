@@ -1,4 +1,4 @@
-// Builds the public receipt viewer (GitHub Pages) into ../web: web/r/ opens links like  …/r/#<packed receipt>.
+// Builds the public receipt viewer (GitHub Pages) into ../docs: docs/r/ opens links like  …/r/#<packed receipt>.
 // It reuses the app's receipt markup and ornament, rendered by the same tiny runtime.
 const fs = require('fs');
 const path = require('path');
@@ -63,15 +63,19 @@ Receipt.tpl = parseTemplate(TEMPLATE);
 async function main() {
   const box = document.getElementById('receipt');
   const hash = location.hash.slice(1);
-  if (!hash) { box.textContent = 'Ссылка на чек неполная.'; return; }
+  if (!hash) { box.textContent = 'This receipt link is incomplete.'; return; }
   try {
     const data = await unpack(hash);
     document.documentElement.lang = data.l === 'en' ? 'en' : 'ru';
     document.title = (data.l === 'en' ? 'Invoice ' : 'Счёт ') + str(data.n) + ' · ' + str(data.c);
-    document.getElementById('save').textContent = data.l === 'en' ? 'Save as PDF' : 'Сохранить PDF';
+    // Page text follows the receipt language; the page itself defaults to English.
+    if (data.l !== 'en') {
+      document.getElementById('save').textContent = 'Сохранить PDF';
+      document.querySelector('.made').textContent = 'TokensTab · калькулятор генераций Higgsfield';
+    }
     render(h(Receipt, { data }), box);
   } catch (e) {
-    box.textContent = 'Не удалось открыть чек: ссылка повреждена.';
+    box.textContent = 'Could not open the receipt: the link is damaged.';
   }
 }
 document.getElementById('save').addEventListener('click', () => window.print());
@@ -79,12 +83,12 @@ main();
 `;
 
 const html = `<!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Счёт</title>
+<title>Invoice</title>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <link href="./app.css" rel="stylesheet">
 <style>
@@ -99,8 +103,8 @@ html, body { margin: 0; background: #E9F0EE; color: #16203A; font-family: 'Onest
 <body>
 <main class="page">
 <div id="receipt"></div>
-<button id="save" type="button">Сохранить PDF</button>
-<span class="made">TokensTab · калькулятор генераций Higgsfield</span>
+<button id="save" type="button">Save as PDF</button>
+<span class="made">TokensTab · Higgsfield generation calculator</span>
 </main>
 <script type="module" src="./viewer.js"></script>
 </body>
@@ -113,6 +117,6 @@ fs.writeFileSync(path.join(rdir, 'dc-runtime.js'),
   fs.readFileSync(path.join(root, 'src', 'dc-runtime.js'), 'utf8').replace("'./vendor/preact.module.js'", "'./preact.module.js'"));
 fs.copyFileSync(path.join(root, 'src', 'vendor', 'preact.module.js'), path.join(rdir, 'preact.module.js'));
 fs.copyFileSync(path.join(root, 'src', 'app.css'), path.join(rdir, 'app.css'));
-fs.writeFileSync(path.join(web, 'index.html'), '<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>TokensTab</title></head><body style="font-family:Segoe UI,sans-serif;padding:40px">TokensTab — калькулятор генераций Higgsfield.</body></html>\n');
+fs.writeFileSync(path.join(web, 'index.html'), '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>TokensTab</title></head><body style="font-family:Segoe UI,sans-serif;padding:40px">TokensTab — a Higgsfield credit calculator for Windows. <a href="https://github.com/tulerpeton-core/tokenstab">GitHub</a> · <a href="https://github.com/tulerpeton-core/tokenstab/releases/latest">Download</a></body></html>\n');
 fs.writeFileSync(path.join(web, '.nojekyll'), '');
 console.log('viewer written to', rdir);

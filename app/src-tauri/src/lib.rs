@@ -2,7 +2,7 @@
 //!
 //! Besides the window, the app runs a tiny HTTP endpoint on 127.0.0.1 for the
 //! TokensTab Collector browser extension:
-//!   POST /hello     {tab, loggedIn}        extension heartbeat; returns a pending command for the Higgsfield tab
+//!   POST /hello     {tab, loggedIn}        extension heartbeat; returns the UI language and a pending command for the Higgsfield tab
 //!   POST /progress  {state, idx, total, model}
 //!   POST /catalog   {ts, models: {...}}    prices read from higgsfield.ai
 //!   GET  /ping
@@ -29,6 +29,7 @@ struct Hub {
     scan: Value,
     live: Value,
     live_path: Option<PathBuf>,
+    lang: String,
 }
 
 #[derive(Clone)]
@@ -130,7 +131,7 @@ fn handle(mut stream: TcpStream, hub: Shared) {
             }
             // Commands go only to the Higgsfield tab, never to the background heartbeat.
             let cmd = if tab { h.command.take() } else { None };
-            respond(&mut stream, 200, &json!({ "app": "TokensTab", "command": cmd }).to_string())
+            respond(&mut stream, 200, &json!({ "app": "TokensTab", "command": cmd, "lang": h.lang }).to_string())
         }
         ("POST", "/progress") => {
             h.ext_seen = now;
@@ -203,6 +204,12 @@ fn stop_scan(hub: State<'_, Shared>) {
     h.scan = json!({ "state": "stopped" });
 }
 
+/// The app UI language ("ru" / "en"); the extension popup follows it.
+#[tauri::command]
+fn set_lang(lang: String, hub: State<'_, Shared>) {
+    lock(&hub).lang = if lang == "en" { "en" } else { "ru" }.to_string();
+}
+
 #[tauri::command]
 fn get_live(hub: State<'_, Shared>) -> Value {
     lock(&hub).live.clone()
@@ -267,7 +274,7 @@ fn save_receipt_pdf(app: tauri::AppHandle, html: String, name: String) -> Result
     std::fs::write(&page, html).map_err(|e| e.to_string())?;
     let pdf = docs.join(format!("{}.pdf", safe_file_name(&name)));
     let _ = std::fs::remove_file(&pdf);
-    let edge = edge_path().ok_or("Microsoft Edge не найден")?;
+    let edge = edge_path().ok_or("Microsoft Edge not found")?;
     let url = format!("file:///{}", page.display().to_string().replace('\\', "/"));
     let status = std::process::Command::new(edge)
         .args([
@@ -284,7 +291,7 @@ fn save_receipt_pdf(app: tauri::AppHandle, html: String, name: String) -> Result
         .status()
         .map_err(|e| e.to_string())?;
     if !pdf.exists() {
-        return Err(format!("PDF не создан ({status})"));
+        return Err(format!("PDF was not created ({status})"));
     }
     Ok(pdf.display().to_string())
 }
@@ -358,6 +365,7 @@ pub fn run() {
             request_scan,
             stop_scan,
             get_live,
+            set_lang,
             open_collector_folder,
             open_higgsfield,
             save_receipt_pdf,

@@ -31,6 +31,7 @@ function qrPath(text) {
 
 const STORE = 'tokenstab.v1';
 const CATALOG_DATE = Date.UTC(2026, 9, 16);
+const SAMPLE_CLIENT = { ru: 'Студия «Север»', en: 'North Studio' };
 const KEEP = ['theme', 'lang', 'cur', 'fx', 'items', 'client', 'markup', 'markupMax', 'plan', 'brand', 'sign', 'saved', 'no', 'remind', 'priceTs', 'pinned', 'live', 'liveTs', 'changesList'];
 const tauri = () => window.__TAURI__;
 const tauriWin = () => tauri() && tauri().window && tauri().window.getCurrentWindow();
@@ -80,6 +81,9 @@ class App extends Design {
     const saved = load();
     for (const k of KEEP) if (saved[k] !== undefined) this.state[k] = saved[k];
     this.state.ext = 'none';
+    // First start: Windows language decides; afterwards the saved choice.
+    if (saved.lang === undefined) this.state.lang = /^ru|^uk|^be|^kk/i.test(navigator.language || '') ? 'ru' : 'en';
+    if (saved.client === undefined) this.state.client = SAMPLE_CLIENT[this.state.lang];
     if (!this.state.priceTs) this.state.priceTs = CATALOG_DATE;
     if (this.state.pinned == null) this.state.pinned = true;
     this.state.days = Math.max(0, Math.floor((Date.now() - this.state.priceTs) / 864e5));
@@ -179,6 +183,7 @@ class App extends Design {
   }
   ru() { return this.state.lang !== 'en'; }
   poll() {
+    invoke('set_lang', { lang: this.state.lang }).catch(() => {});
     invoke('ext_status').then((st) => {
       const s = this.state;
       const sc = st.scan || {};
@@ -263,6 +268,13 @@ class App extends Design {
       sendLink: () => this.copyLink(),
       sendPng: () => this.savePdf(),
       changes: s.changesList || v.changes,
+      langShort: ru ? 'RU' : 'EN',
+      langSwitchAria: ru ? 'Switch to English' : 'Переключить на русский',
+      toggleLang: () => {
+        const lang = ru ? 'en' : 'ru';
+        // The sample client name follows the language until the user types a real one.
+        this.setState(s.client === SAMPLE_CLIENT[s.lang] ? { lang, client: SAMPLE_CLIENT[lang] } : { lang });
+      },
       pinPressed: String(!!s.pinned),
       winPin: () => { const p = !s.pinned; this.setState({ pinned: p }); const w = tauriWin(); if (w) w.setAlwaysOnTop(p).catch(() => {}); },
       winMin: () => { const w = tauriWin(); if (w) w.minimize(); },

@@ -37,15 +37,19 @@ Receipt.tpl = parseTemplate(TEMPLATE);
 async function main() {
   const box = document.getElementById('receipt');
   const hash = location.hash.slice(1);
-  if (!hash) { box.textContent = 'Ссылка на чек неполная.'; return; }
+  if (!hash) { box.textContent = 'This receipt link is incomplete.'; return; }
   try {
     const data = await unpack(hash);
     document.documentElement.lang = data.l === 'en' ? 'en' : 'ru';
     document.title = (data.l === 'en' ? 'Invoice ' : 'Счёт ') + str(data.n) + ' · ' + str(data.c);
-    document.getElementById('save').textContent = data.l === 'en' ? 'Save as PDF' : 'Сохранить PDF';
+    // Page text follows the receipt language; the page itself defaults to English.
+    if (data.l !== 'en') {
+      document.getElementById('save').textContent = 'Сохранить PDF';
+      document.querySelector('.made').textContent = 'TokensTab · калькулятор генераций Higgsfield';
+    }
     render(h(Receipt, { data }), box);
   } catch (e) {
-    box.textContent = 'Не удалось открыть чек: ссылка повреждена.';
+    box.textContent = 'Could not open the receipt: the link is damaged.';
   }
 }
 document.getElementById('save').addEventListener('click', () => window.print());

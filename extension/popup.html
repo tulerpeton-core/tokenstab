@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <title>TokensTab Collector</title>
@@ -9,12 +9,12 @@
 <main class="wrap">
 <header class="head">
 <img src="icons/128.png" alt="" width="26" height="26">
-<span class="brand"><b>TokensTab Collector</b><small>цены Higgsfield для TokensTab</small></span>
+<span class="brand"><b>TokensTab Collector</b><small id="sub"></small></span>
 </header>
 <section class="card checks">
-<div class="row" id="rowApp"><span class="dot" aria-hidden="true"></span><span><b>Приложение TokensTab</b><small></small></span></div>
-<div class="row" id="rowTab"><span class="dot" aria-hidden="true"></span><span><b>Вкладка higgsfield.ai</b><small></small></span></div>
-<div class="row" id="rowLast"><span class="dot ok" aria-hidden="true">✓</span><span><b>Последнее обновление</b><small></small></span></div>
+<div class="row" id="rowApp"><span class="dot" aria-hidden="true"></span><span><b></b><small></small></span></div>
+<div class="row" id="rowTab"><span class="dot" aria-hidden="true"></span><span><b></b><small></small></span></div>
+<div class="row" id="rowLast"><span class="dot ok" aria-hidden="true">✓</span><span><b></b><small></small></span></div>
 </section>
 <section class="card main">
 <h1 id="title"></h1>
@@ -23,13 +23,13 @@
 <div class="progline"><span id="progLabel"></span><b id="progPct"></b></div>
 <div class="bar" aria-hidden="true"><span id="progBar"></span></div>
 </div>
-<p class="warn" id="warn" hidden>Сдвиньте ползунок проверки во вкладке Higgsfield, потом нажмите «Продолжить».</p>
+<p class="warn" id="warn" hidden></p>
 <div class="btns">
 <button id="primary" class="primary" type="button"></button>
-<button id="secondary" class="secondary" type="button" hidden>Остановить</button>
+<button id="secondary" class="secondary" type="button" hidden></button>
 </div>
 </section>
-<p class="foot">Работает только по кнопке. Переключает настройки медленно, с паузами 1–2 с, и ничего не генерирует. Держите вкладку Higgsfield видимой, пока идёт обновление.</p>
+<p class="foot" id="foot"></p>
 </main>
 <script src="popup.js"></script>
 </body>

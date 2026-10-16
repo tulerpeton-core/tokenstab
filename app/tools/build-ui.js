@@ -9,6 +9,8 @@ function rep(a, b) { const n = html.split(a).length - 1; if (n !== 1) throw new 
 // Desktop window controls: drag region and the header buttons.
 rep('<header style="height: 40px;', '<header data-tauri-drag-region style="height: 40px;');
 rep('<button class="ib" aria-label="{{L.pin}}" aria-pressed="true"', '<button class="ib" aria-label="{{L.pin}}" aria-pressed="{{pinPressed}}" onClick="{{winPin}}"');
+// Language switch next to the theme button: always visible, one click RU ↔ EN.
+rep('<button class="ib" aria-label="{{themeLabel}}" onClick="{{toggleTheme}}"', '<button class="ib" aria-label="{{langSwitchAria}}" title="{{langSwitchAria}}" onClick="{{toggleLang}}" style="height: 36px; padding: 0 9px; border: 0; border-radius: 18px; background: transparent; color: {{t.ink}}; font-size: 13px; font-weight: 600; letter-spacing: 0.04em">{{langShort}}</button>\n<button class="ib" aria-label="{{themeLabel}}" onClick="{{toggleTheme}}"');
 rep('<button class="ib" aria-label="{{L.minimize}}"', '<button class="ib" aria-label="{{L.minimize}}" onClick="{{winMin}}"');
 rep('<button class="ib" aria-label="{{L.close}}" style="width: 32px; height: 36px;', '<button class="ib" aria-label="{{L.close}}" onClick="{{winClose}}" style="width: 32px; height: 36px;');
 

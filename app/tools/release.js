@@ -1,4 +1,4 @@
-// Release in one command:  npm run release -- "Что нового"
+// Release in one command:  npm run release -- "What is new"
 //  1) signed build (key from ~/.tauri/tokenstab.key, never stored in the repo)
 //  2) latest.json for the updater
 //  3) GitHub release vX.Y.Z with installer + latest.json (needs GitHub CLI `gh`, logged in)
@@ -30,5 +30,5 @@ const repo = cfg.owner + '/' + cfg.repo;
 
 run(`git add -A && git commit -m "Release v${version}" || echo nothing to commit`, repoRoot);
 run('git push', repoRoot);
-run(`gh release create v${version} "${exe}" "${path.join(dir, 'latest.json')}" --repo ${repo} --title "TokensTab ${version}" --notes ${JSON.stringify(notes || 'Обновление')}`);
+run(`gh release create v${version} "${exe}" "${path.join(dir, 'latest.json')}" --repo ${repo} --title "TokensTab ${version}" --notes ${JSON.stringify(notes || 'Update')}`);
 console.log('\nDone: installed apps will offer v' + version + ' on next start.');

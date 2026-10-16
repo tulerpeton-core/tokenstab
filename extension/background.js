@@ -40,6 +40,7 @@ async function deliver() {
 async function heartbeat() {
   const r = await call('/hello', { tab: false });
   await chrome.storage.local.set({ appOnline: !!r, appSeen: r ? Date.now() : 0 });
+  if (r && r.lang) await chrome.storage.local.set({ lang: r.lang });
   if (r) await deliver();
   return r;
 }
@@ -71,7 +72,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       case 'status': {
         const app = await heartbeat();
         const tabs = await chrome.tabs.query({ url: 'https://higgsfield.ai/*' });
-        const st = await chrome.storage.local.get(['scan', 'progress', 'lastDone', 'tabSeen']);
+        const st = await chrome.storage.local.get(['scan', 'progress', 'lastDone', 'tabSeen', 'lang']);
         const live = !!st.tabSeen && Date.now() - st.tabSeen < 8000;
         return sendResponse({ app: !!app, tab: tabs.length > 0, tabLive: live, waiting: !!(await undelivered()), ...st });
       }
