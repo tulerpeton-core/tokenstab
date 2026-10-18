@@ -277,12 +277,14 @@ class App extends Design {
       later: () => this.setState({ updDismissed: s.updVersion }),
       install: () => { this.setState({ updBusy: true }); invoke('install_update').catch(() => { this.setState({ updBusy: false }); toast(ru ? 'Не удалось установить обновление' : 'Update failed'); }); }
     };
+    // With an update waiting, the version row installs it right here instead of sending the user to the banner.
+    const hasUpd = !!s.updVersion && s.updVersion !== s.appVer;
     const ver = {
       title: 'TokensTab ' + (s.appVer || ''),
-      note: s.updVersion && s.updVersion !== s.appVer ? (ru ? 'Доступна версия ' : 'Available: ') + s.updVersion : (ru ? 'Обновления ставятся сами — проверка при запуске и раз в 6 часов' : 'Updates install themselves — checked on start and every 6 hours'),
-      label: s.updChecking ? (ru ? 'Проверяю…' : 'Checking…') : (ru ? 'Проверить' : 'Check now'),
-      busy: !!s.updChecking,
-      check: () => this.checkUpdate(true)
+      note: hasUpd ? (ru ? 'Доступна версия ' : 'Available: ') + s.updVersion : (ru ? 'Обновления ставятся сами — проверка при запуске и раз в 6 часов' : 'Updates install themselves — checked on start and every 6 hours'),
+      label: s.updChecking ? (ru ? 'Проверяю…' : 'Checking…') : (hasUpd ? upd.installLabel : (ru ? 'Проверить' : 'Check now')),
+      busy: !!s.updChecking || !!s.updBusy,
+      check: hasUpd ? upd.install : () => this.checkUpdate(true)
     };
     return {
       ext, qr, upd, ver,
