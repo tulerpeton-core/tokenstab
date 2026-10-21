@@ -1,0 +1,406 @@
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Onest:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#EFEEE9}
+#root{width:100%;height:100%}
+button,input{font-family:inherit}
+button,a{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #1D2527;outline-offset:2px}
+.ns{scrollbar-width:none}.ns::-webkit-scrollbar{display:none}
+.press{transition:transform .2s cubic-bezier(.2,.7,.2,1),background .25s ease,color .25s ease,box-shadow .3s ease}.press:active{transform:scale(.96)}
+.go .arr{transition:transform .3s cubic-bezier(.2,.7,.2,1)}.go:hover .arr{transform:rotate(45deg)}
+.fadeup{animation:rise .45s cubic-bezier(.2,.7,.2,1) both}
+.print{animation:print 1s cubic-bezier(.3,.6,.2,1) both}
+.led{animation:led .5s steps(2) 8}
+.rcmark{background:linear-gradient(#C8F25C,#C8F25C) 0 88% / 100% 42% no-repeat;animation:rcmark .55s cubic-bezier(.2,.7,.2,1) 1.15s both}
+.rcflow{background:#22336E;animation:rcflow 7s ease-in-out 1.2s infinite alternate}
+.fx-in{border:0;outline:none}
+.fx-in::placeholder{color:#5C6667;opacity:1}
+.fx-in:focus{box-shadow:inset 0 0 0 2px #1D2527}
+.fx-cli{border:0;background:transparent;outline:none}
+.fx-cli:focus{box-shadow:0 2px 0 #1B2224}
+.fx-num{border:0;outline:none;-moz-appearance:textfield}.fx-num::-webkit-inner-spin-button{-webkit-appearance:none}
+.sl{position:relative;flex:1;min-width:0;height:10px;border-radius:5px;background:#ECEDF2}
+.sl-v{--a:#F5F0FF;--b:#B293FF;--c:#6A38E6}
+.sl-o{--a:#FFF3E8;--b:#FFB685;--c:#FF6A1A}
+.sl input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.sl-fill{position:absolute;inset:0;border-radius:5px;overflow:hidden;pointer-events:none;background:linear-gradient(90deg,var(--a) 0%,var(--b) 50%,var(--c) 100%);transition:clip-path .18s ease-out}
+.sl-fill::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.95) 0 .75px,transparent 1.2px),radial-gradient(circle,rgba(255,255,255,.8) 0 .6px,transparent 1px),radial-gradient(circle,rgba(255,255,255,.95) 0 .9px,transparent 1.4px),radial-gradient(circle,rgba(255,255,255,.7) 0 .65px,transparent 1.1px);background-size:46px 10px,71px 10px,97px 10px,131px 10px;background-repeat:repeat-x;background-position:6px 3px,20px 7px,40px 4px,70px 6px;animation:slDrift 6s linear infinite}
+.sl-fill::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.42) 50%,transparent 65%);background-size:220% 100%;background-position:120% 0;animation:slSheen 3.4s ease-in-out infinite}
+.sl-thumb{position:absolute;top:-4px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(30,20,70,.28),0 0 0 1px rgba(30,20,70,.06);pointer-events:none;transition:left .18s ease-out}
+.sl input:focus-visible~.sl-thumb{outline:2px solid #1D2527;outline-offset:2px}
+.fold{display:grid;transition:grid-template-rows .3s cubic-bezier(.2,.7,.2,1)}
+.seg{animation:segIn .5s ease-out both}
+.seg.cur{animation:segPulse 1.1s ease-in-out infinite}
+.ring-btn{transition:background .25s ease,box-shadow .25s ease}
+.swchev{animation:swchev 1.6s ease-in-out infinite}.swchev:nth-child(2){animation-delay:.18s}.swchev:nth-child(3){animation-delay:.36s}
+.swtext{background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:swtext 2.8s linear infinite}
+.swtw{animation:swtw 1s ease-in-out infinite alternate}
+.swfade{animation:swfade .4s ease .5s both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes fadeout{from{opacity:1}to{opacity:0}}
+@keyframes print{0%{transform:translateY(-101%)}22%{transform:translateY(-72%)}30%{transform:translateY(-70%)}52%{transform:translateY(-38%)}60%{transform:translateY(-36%)}82%{transform:translateY(-6%)}100%{transform:translateY(0)}}
+@keyframes led{to{opacity:.2}}
+@keyframes rcmark{from{background-size:0 42%}to{background-size:100% 42%}}
+@keyframes rcflow{0%{background-color:#22336E}40%{background-color:#3A64AE}70%{background-color:#5B8DEF}100%{background-color:#B8EC50}}
+@keyframes slDrift{from{background-position:6px 3px,20px 7px,40px 4px,70px 6px}to{background-position:-40px 3px,-51px 7px,-57px 4px,-61px 6px}}
+@keyframes slSheen{0%{background-position:120% 0}100%{background-position:-120% 0}}
+@keyframes segIn{from{opacity:0}to{opacity:1}}
+@keyframes segPulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes swchev{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes swtext{from{background-position:130% 0}to{background-position:-130% 0}}
+@keyframes swtw{from{opacity:.35}to{opacity:1}}
+@keyframes swfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="position: relative; width: 100%; height: 100vh; min-height: 800px; overflow: hidden; font-family: 'Manrope', 'Segoe UI', sans-serif; color: #1B2224">
+
+<svg width="0" height="0" aria-hidden="true" style="position: absolute"><defs><symbol id="fxHf" viewBox="0 0 554 554"><rect width="554" height="554" fill="#D2FF1C"></rect><path d="M75 171 C125 171 150 148 180 122 C215 92 262 112 252 160 C238 215 150 235 130 290 C112 340 175 355 215 322 C265 282 300 232 340 205 C395 170 450 215 414 262 C385 300 320 330 300 385 C285 430 330 452 365 425 C405 395 415 345 400 305 C396 292 410 290 430 290 L478 290" fill="none" stroke="#141414" stroke-width="48" stroke-linejoin="round"></path></symbol></defs></svg>
+
+<!-- ============================== Calc ============================== -->
+<sc-if value="{{scr.calc}}" hint-placeholder-val="{{true}}">
+<main aria-label="{{N.calcAria}}" style="position: absolute; inset: 0; box-sizing: border-box; padding: 8px; background: #C6F36E; display: flex; flex-direction: column; gap: 8px">
+<header data-tauri-drag-region style="flex: none; height: 52px; padding: 6px 0 0 6px; display: flex; align-items: center; gap: 10px">
+<button class="press" aria-label="{{N.history}}" onClick="{{cv.goHistory}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 50%; background: rgba(27,34,36,0.08); color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5M12 7v5l3 2"></path></svg></button>
+<span data-tauri-drag-region style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+<span data-tauri-drag-region style="font-size: 12px; color: #3F4B2C">{{cv.noLabel}}</span>
+<input class="fx-cli" aria-label="{{N.client}}" placeholder="{{N.clientPh}}" value="{{cv.client}}" onChange="{{cv.setClient}}" style="width: 100%; padding: 0; font-size: 16px; font-weight: 600; color: #1B2224">
+</span>
+<button class="press" aria-label="{{N.settings}}" onClick="{{cv.goSettings}}" style="width: 36px; height: 36px; flex: none; border: 0; border-radius: 50%; background: transparent; color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg></button>
+<span aria-hidden="true" style="width: 1px; height: 18px; background: rgba(27,34,36,0.2)"></span>
+<!--WINCTL-->
+</header>
+
+<section aria-label="{{N.totalAria}}" style="flex: none; padding: 2px 12px 4px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 14px">{{N.toPay}}</span>
+<button class="press" onClick="{{cv.goPrices}}" style="height: 30px; padding: 0 12px; border: 0; border-radius: 15px; background: rgba(27,34,36,0.08); color: #1B2224; display: flex; align-items: center; gap: 7px; font-size: 12px"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: {{cv.dotColor}}"></span>{{cv.priceText}}</button>
+</div>
+<span aria-live="polite" style="font-size: {{cv.bigSize}}px; font-weight: 500; line-height: 0.95; letter-spacing: -0.055em; white-space: nowrap">{{cv.totalInt}}<span style="font-size: {{cv.fracSize}}px; letter-spacing: -0.02em">{{cv.totalFrac}}</span></span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="font-size: 13px; color: #3F4B2C">{{cv.creditsLine}}</span>
+<button class="press" aria-expanded="{{cv.openStr}}" onClick="{{cv.toggleOpen}}" style="height: 32px; padding: 0 8px 0 14px; border: 0; border-radius: 16px; background: #1D2527; color: #C6F36E; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600">{{N.profitTax}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{cv.rot}}deg); transition: transform .3s cubic-bezier(.2,.7,.2,1)"><path d="M6 9l6 6 6-6"></path></svg></button>
+</div>
+<div class="fold" style="grid-template-rows: {{cv.fold}}">
+<div style="min-height: 0; overflow: hidden">
+<div style="padding-top: 2px; display: flex; flex-wrap: wrap; gap: 6px">
+<span style="height: 30px; padding: 0 13px; border-radius: 15px; background: #FFFFFF; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5C6667">{{N.cost}}<b style="color: #1B2224; font-weight: 700">{{cv.cost}}</b></span>
+<span style="height: 30px; padding: 0 13px; border-radius: 15px; background: #1D2527; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #C6F36E"><span>{{cv.profit}}</span><span style="font-weight: 500; color: #E7F7BF">{{N.profit}}</span></span>
+<span style="height: 30px; padding: 0 13px; border-radius: 15px; background: #FF8A4C; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #3A1A08">{{N.tax}}<b style="font-weight: 700">{{cv.tax}}</b></span>
+</div>
+</div>
+</div>
+</section>
+
+<sc-if value="{{cv.editing}}" hint-placeholder-val="{{false}}"><div role="status" style="flex: none; height: 38px; box-sizing: border-box; padding: 0 6px 0 14px; border-radius: 19px; background: #1D2527; color: #C6F36E; display: flex; align-items: center; gap: 8px; font-size: 13px"><span style="flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{cv.editingText}}</span><button class="press" onClick="{{cv.cancelEdit}}" style="height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: rgba(198,243,110,0.18); color: #C6F36E; font-size: 12px; font-weight: 600">{{N.cancel}}</button></div></sc-if>
+
+<section aria-label="{{N.markupTax}}" style="flex: none; padding: 6px 14px; border-radius: 26px; background: #FFFFFF">
+<sc-for list="{{cv.levers}}" as="l" hint-placeholder-count="2">
+<div style="height: 34px; display: flex; align-items: center; gap: 10px">
+<label for="{{l.id}}" style="width: 64px; flex: none; font-size: 13px; color: #5C6667">{{l.label}}</label>
+<div class="sl {{l.cls}}">
+<input id="{{l.id}}" type="range" min="0" max="{{l.max}}" step="{{l.step}}" value="{{l.v}}" onInput="{{l.set}}" aria-valuetext="{{l.text}}">
+<div class="sl-fill" aria-hidden="true" style="clip-path: {{l.clip}}"></div>
+<div class="sl-thumb" aria-hidden="true" style="left: {{l.left}}"></div>
+</div>
+<span style="width: 54px; flex: none; text-align: right; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{l.text}}</span>
+</div>
+</sc-for>
+</section>
+
+<section aria-label="{{N.positions}}" style="position: relative; flex: 1; min-height: 0; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; overflow: hidden">
+<div style="flex: none; padding: 10px 10px 4px 16px; display: flex; align-items: center; gap: 10px">
+<span style="flex: 1; font-size: 13px; letter-spacing: 0.02em">{{N.positions}}</span>
+<button class="press" aria-label="{{N.provider}}: Higgsfield" aria-haspopup="true" aria-expanded="{{cv.provStr}}" onClick="{{cv.toggleProv}}" style="width: 40px; height: 40px; border: 0; border-radius: 50%; background: #D2FF1C; overflow: hidden; box-shadow: {{cv.provRing}}; display: flex; align-items: center; justify-content: center; transition: box-shadow .25s ease"><svg width="40" height="40" aria-hidden="true" style="display: block"><use href="#fxHf"></use></svg></button>
+<button class="press" aria-label="{{N.add}}" onClick="{{cv.openAdd}}" style="width: 40px; height: 40px; border: 0; border-radius: 50%; background: #1D2527; color: #C6F36E; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+<sc-if value="{{cv.prov}}" hint-placeholder-val="{{false}}">
+<div role="menu" aria-label="{{N.provider}}" style="position: absolute; z-index: 3; top: 54px; left: 10px; right: 10px; padding: 8px; border-radius: 26px; background: #FFFFFF; box-shadow: 0 14px 34px rgba(27,34,36,0.22), 0 0 0 1px rgba(27,34,36,0.06); display: flex; flex-direction: column; gap: 4px">
+<button role="menuitemradio" aria-checked="true" onClick="{{cv.toggleProv}}" style="padding: 8px 12px 8px 8px; border: 0; border-radius: 20px; background: #EEF1EC; color: #1B2224; display: flex; align-items: center; gap: 12px; text-align: left"><span aria-hidden="true" style="width: 44px; height: 44px; flex: none; border-radius: 50%; overflow: hidden; display: block"><svg width="44" height="44" style="display: block"><use href="#fxHf"></use></svg></span><span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 600">Higgsfield</span><span style="font-size: 13px; color: #5C6667">{{cv.provSub}}</span></span><span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 50%; background: #1D2527; color: #C6F36E; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span></button>
+<div style="padding: 8px 12px 8px 8px; display: flex; align-items: center; gap: 12px; color: #5C6667"><span aria-hidden="true" style="width: 44px; height: 44px; flex: none; box-sizing: border-box; border-radius: 50%; border: 1.5px dashed #B9C0BD; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></span><span style="font-size: 14px">{{N.provSoon}}</span></div>
+</div>
+</sc-if>
+<div class="ns" style="flex: 1; min-height: 0; padding: 0 12px 0 14px; overflow-y: auto">
+<sc-for list="{{cv.rows}}" as="r" hint-placeholder-count="5">
+<div style="min-height: 54px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ECEFEA">
+<span style="width: 34px; height: 34px; flex: none; border-radius: 50%; background: {{r.tint}}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{r.ink}}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg></span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; white-space: nowrap; min-width: 0"><span style="min-width: 0; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span><sc-if value="{{r.hasTag}}" hint-placeholder-val="{{false}}"><span style="flex: none; height: 17px; padding: 0 6px; border-radius: 9px; background: #C6F36E; font-size: 10px; font-weight: 700; display: flex; align-items: center">{{r.tag}}</span></sc-if></span>
+<span style="font-size: 12px; color: #5C6667; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.sub}}</span>
+</span>
+<span style="display: flex; align-items: center; gap: 2px">
+<button class="press" aria-label="{{r.decAria}}" onClick="{{r.dec}}" style="width: 26px; height: 26px; border: 0; border-radius: 50%; background: #F0F2EE; color: {{r.decColor}}; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<span style="min-width: 24px; text-align: center; font-size: 14px; font-variant-numeric: tabular-nums">{{r.qty}}</span>
+<button class="press" aria-label="{{r.incAria}}" onClick="{{r.inc}}" style="width: 26px; height: 26px; border: 0; border-radius: 50%; background: #F0F2EE; color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</span>
+<span style="min-width: 54px; text-align: right; font-size: 14px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums">{{r.cr}} {{L.cr}}</span>
+</div>
+</sc-for>
+<sc-if value="{{cv.noItems}}" hint-placeholder-val="{{false}}"><p style="margin: 18px 4px; font-size: 14px; line-height: 1.5; color: #5C6667">{{N.emptyItems}}</p></sc-if>
+</div>
+</section>
+<!--SWIPE-->
+</main>
+</sc-if>
+
+<!-- ============================== Add ============================== -->
+<sc-if value="{{scr.add}}" hint-placeholder-val="{{false}}">
+<main aria-label="{{N.addAria}}" style="position: absolute; inset: 0; box-sizing: border-box; padding: 8px; background: #EFEEE9; display: flex; flex-direction: column; gap: 8px">
+<header data-tauri-drag-region style="flex: none; height: 52px; padding: 6px 0 0 6px; display: flex; align-items: center; gap: 12px">
+<button class="press" aria-label="{{N.back}}" onClick="{{av.back}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 50%; background: rgba(27,34,36,0.07); color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12H3M8 7l-5 5 5 5"></path></svg></button>
+<span data-tauri-drag-region style="flex: 1; font-size: 16px; font-weight: 600">{{N.newItem}}</span>
+<!--WINCTL-->
+</header>
+
+<section aria-label="{{N.itemPrice}}" style="flex: none; padding: 2px 12px 4px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px">{{av.unitLabel}}</span>
+<span aria-live="polite" style="font-size: 72px; font-weight: 500; line-height: 0.95; letter-spacing: -0.055em; white-space: nowrap">{{av.unit}}<span style="font-size: 30px; letter-spacing: -0.02em"> {{L.cr}}</span></span>
+<span style="font-size: 14px; color: #5C6667">{{av.line}}</span>
+</section>
+
+<div role="group" aria-label="{{N.genType}}" style="flex: none; padding: 4px; border-radius: 26px; background: #FFFFFF; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px">
+<sc-for list="{{av.kinds}}" as="k" hint-placeholder-count="3">
+<button class="press" aria-pressed="{{k.pressed}}" onClick="{{k.pick}}" style="height: 44px; border: 0; border-radius: 22px; background: {{k.bg}}; color: {{k.fg}}; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{k.icon}}"></path></svg>{{k.label}}</button>
+</sc-for>
+</div>
+
+<section aria-label="{{N.model}}" class="ns" style="flex: none; max-height: 232px; overflow-y: auto; padding: 8px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{av.models}}" as="m" hint-placeholder-count="4">
+<button class="press" aria-pressed="{{m.pressed}}" onClick="{{m.pick}}" style="min-height: 46px; flex: none; padding: 0 12px; border: 0; border-radius: 18px; background: {{m.bg}}; color: #1B2224; display: flex; align-items: center; gap: 10px; text-align: left">
+<span aria-hidden="true" style="width: 20px; height: 20px; flex: none; box-sizing: border-box; border-radius: 50%; border: {{m.ring}}; background: #FFFFFF"></span>
+<span style="flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600"><span style="min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{m.name}}</span><sc-if value="{{m.hasTag}}" hint-placeholder-val="{{false}}"><span style="flex: none; height: 17px; padding: 0 6px; border-radius: 9px; background: #C6F36E; font-size: 10px; font-weight: 700; display: flex; align-items: center">{{m.tag}}</span></sc-if></span>
+<span style="font-size: 13px; color: #5C6667; white-space: nowrap">{{m.from}}</span>
+</button>
+</sc-for>
+</section>
+
+<section aria-label="{{N.params}}" class="ns" style="flex: 1; min-height: 0; padding: 6px 16px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; overflow-y: auto">
+<sc-if value="{{av.hasRes}}" hint-placeholder-val="{{true}}">
+<div style="min-height: 56px; display: flex; align-items: center; gap: 10px">
+<span style="width: 84px; flex: none; font-size: 13px; color: #5C6667">{{av.resLabel}}</span>
+<div role="group" aria-label="{{av.resLabel}}" style="flex: 1; display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{av.res}}" as="r" hint-placeholder-count="4"><button class="press" aria-pressed="{{r.pressed}}" onClick="{{r.pick}}" style="height: 34px; padding: 0 12px; border: 0; border-radius: 17px; background: {{r.bg}}; color: {{r.fg}}; font-size: 13px; font-weight: 600">{{r.label}}</button></sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{av.hasQ}}" hint-placeholder-val="{{false}}">
+<div style="min-height: 56px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ECEFEA">
+<span style="width: 84px; flex: none; font-size: 13px; color: #5C6667">{{N.quality}}</span>
+<div role="group" aria-label="{{N.quality}}" style="flex: 1; display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{av.qs}}" as="r" hint-placeholder-count="3"><button class="press" aria-pressed="{{r.pressed}}" onClick="{{r.pick}}" style="height: 34px; padding: 0 12px; border: 0; border-radius: 17px; background: {{r.bg}}; color: {{r.fg}}; font-size: 13px; font-weight: 600">{{r.label}}</button></sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{av.hasOwn}}" hint-placeholder-val="{{false}}">
+<div style="min-height: 56px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ECEFEA">
+<label for="fx-own" style="flex: 1; font-size: 13px; color: #5C6667">{{L.ownPrice}}</label>
+<input id="fx-own" class="fx-num" type="number" min="0" step="0.05" value="{{av.own}}" onChange="{{av.setOwn}}" style="width: 96px; height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 20px; background: #F0F2EE; font-size: 16px; font-weight: 600; text-align: right; color: #1B2224">
+</div>
+</sc-if>
+<sc-if value="{{av.hasDur}}" hint-placeholder-val="{{true}}">
+<div style="min-height: 56px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ECEFEA">
+<label for="fx-dur" style="width: 84px; flex: none; font-size: 13px; color: #5C6667">{{N.duration}}</label>
+<div class="sl sl-v"><input id="fx-dur" type="range" min="{{av.dMin}}" max="{{av.dMax}}" step="1" value="{{av.dVal}}" onInput="{{av.setDur}}" aria-valuetext="{{av.durText}}"><div class="sl-fill" aria-hidden="true" style="clip-path: {{av.dClip}}"></div><div class="sl-thumb" aria-hidden="true" style="left: {{av.dLeft}}"></div></div>
+<span style="width: 58px; flex: none; text-align: right; font-size: 16px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{av.durText}}</span>
+</div>
+</sc-if>
+<sc-if value="{{av.hasChars}}" hint-placeholder-val="{{false}}">
+<div style="min-height: 56px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ECEFEA">
+<label for="fx-chars" style="width: 84px; flex: none; font-size: 13px; color: #5C6667">{{N.charsLbl}}</label>
+<div class="sl sl-o"><input id="fx-chars" type="range" min="50" max="5000" step="1" value="{{av.cVal}}" onInput="{{av.setChars}}" aria-valuetext="{{av.charsText}}"><div class="sl-fill" aria-hidden="true" style="clip-path: {{av.cClip}}"></div><div class="sl-thumb" aria-hidden="true" style="left: {{av.cLeft}}"></div></div>
+<span style="width: 58px; flex: none; text-align: right; font-size: 16px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums">{{av.charsText}}</span>
+</div>
+</sc-if>
+<div style="min-height: 56px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ECEFEA">
+<span style="flex: 1; font-size: 13px; color: #5C6667">{{N.qty}}</span>
+<button class="press" aria-label="{{L.less}}" onClick="{{av.qtyLess}}" style="width: 34px; height: 34px; border: 0; border-radius: 50%; background: #F0F2EE; color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<span style="min-width: 44px; text-align: center; font-size: 16px; font-weight: 600">{{av.qty}}</span>
+<button class="press" aria-label="{{L.more}}" onClick="{{av.qtyMore}}" style="width: 34px; height: 34px; border: 0; border-radius: 50%; background: #F0F2EE; color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+<sc-if value="{{av.hasNote}}" hint-placeholder-val="{{false}}"><p style="margin: 4px 0 8px; padding: 10px 12px; border-radius: 14px; background: #FFF3E8; font-size: 12px; line-height: 1.45; color: #6B3A14">{{av.note}}</p></sc-if>
+</section>
+<!--SWIPE-->
+</main>
+</sc-if>
+
+<!-- ============================== History ============================== -->
+<sc-if value="{{scr.history}}" hint-placeholder-val="{{false}}">
+<main aria-label="{{N.history}}" style="position: absolute; inset: 0; box-sizing: border-box; padding: 8px; background: #EFEEE9; display: flex; flex-direction: column; gap: 8px">
+<header data-tauri-drag-region style="flex: none; height: 52px; padding: 6px 0 0 6px; display: flex; align-items: center; gap: 12px">
+<button class="press" aria-label="{{N.back}}" onClick="{{hv.back}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 50%; background: rgba(27,34,36,0.07); color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12H3M8 7l-5 5 5 5"></path></svg></button>
+<span data-tauri-drag-region style="flex: 1; font-size: 16px; font-weight: 600">{{N.history}}</span>
+<!--WINCTL-->
+</header>
+<section aria-label="{{N.totalAria}}" style="flex: none; padding: 2px 12px 4px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px">{{N.allTime}}</span>
+<span style="font-size: 72px; font-weight: 500; line-height: 0.95; letter-spacing: -0.055em">{{hv.count}}<span style="font-size: 30px; letter-spacing: -0.02em"> {{hv.countWord}}</span></span>
+<span style="font-size: 14px; color: #5C6667">{{hv.sumLine}}</span>
+</section>
+<label style="flex: none; height: 52px; box-sizing: border-box; padding: 0 18px; border-radius: 26px; background: #FFFFFF; display: flex; align-items: center; gap: 10px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C6667" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+<input class="fx-cli" aria-label="{{N.searchAria}}" placeholder="{{N.searchPh}}" value="{{hv.q}}" onInput="{{hv.setQ}}" style="flex: 1; min-width: 0; padding: 0; font-size: 15px; color: #1B2224">
+</label>
+<section class="ns" aria-label="{{N.invoices}}" style="flex: 1; min-height: 0; padding: 4px 8px; border-radius: 28px; background: #FFFFFF; overflow-y: auto">
+<sc-for list="{{hv.rows}}" as="r" hint-placeholder-count="5">
+<button class="press" aria-label="{{r.aria}}" onClick="{{r.open}}" style="width: 100%; min-height: 68px; padding: 0 8px; border: 0; border-top: {{r.line}}; background: transparent; color: #1B2224; display: flex; align-items: center; gap: 12px; text-align: left">
+<span style="width: 42px; height: 42px; flex: none; border-radius: 50%; background: {{r.badge}}; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{r.no}}</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+<span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.client}}</span>
+<span style="font-size: 12px; color: #5C6667; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.meta}}</span>
+</span>
+<span style="font-size: 15px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums">{{r.sum}}</span>
+</button>
+</sc-for>
+<sc-if value="{{hv.empty}}" hint-placeholder-val="{{false}}"><p style="margin: 20px 8px; font-size: 14px; line-height: 1.5; color: #5C6667">{{hv.emptyText}}</p></sc-if>
+</section>
+<!--SWIPE-->
+</main>
+</sc-if>
+
+<!-- ============================== Prices ============================== -->
+<sc-if value="{{scr.prices}}" hint-placeholder-val="{{false}}">
+<main aria-label="{{N.pricesAria}}" style="position: absolute; inset: 0; box-sizing: border-box; padding: 8px; background: #F9A06C; display: flex; flex-direction: column; gap: 8px">
+<header data-tauri-drag-region style="flex: none; height: 52px; padding: 6px 0 0 6px; display: flex; align-items: center; gap: 12px">
+<button class="press" aria-label="{{N.back}}" onClick="{{pv.back}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 50%; background: rgba(27,34,36,0.08); color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12H3M8 7l-5 5 5 5"></path></svg></button>
+<span data-tauri-drag-region style="flex: 1; font-size: 16px; font-weight: 600">{{N.pricesTitle}}</span>
+<!--WINCTL-->
+</header>
+<section aria-live="polite" style="flex: none; padding: 2px 12px 4px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px">{{pv.kicker}}</span>
+<span style="font-size: 72px; font-weight: 500; line-height: 0.95; letter-spacing: -0.055em; white-space: nowrap">{{pv.big}}<span style="font-size: 30px; letter-spacing: -0.02em"> {{pv.bigUnit}}</span></span>
+<span style="font-size: 14px; color: #4A2A14">{{pv.note}}</span>
+</section>
+<section aria-label="{{N.connection}}" style="flex: none; padding: 4px 16px; border-radius: 28px; background: #FFFFFF">
+<sc-for list="{{pv.checks}}" as="c" hint-placeholder-count="3">
+<div style="min-height: 42px; display: flex; align-items: center; gap: 12px; border-top: {{c.line}}">
+<span style="width: 24px; height: 24px; flex: none; border-radius: 50%; background: {{c.bg}}; color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg></span>
+<span style="flex: 1; font-size: 14px; font-weight: 600">{{c.name}}</span>
+<span style="font-size: 13px; color: #5C6667">{{c.state}}</span>
+</div>
+</sc-for>
+</section>
+<section aria-label="{{pv.readTitle}}" style="flex: 1; min-height: 0; padding: 12px 14px 12px 16px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; gap: 6px">
+<div style="flex: none; display: flex; align-items: baseline; justify-content: space-between; gap: 8px"><span style="font-size: 13px; letter-spacing: 0.02em">{{pv.readTitle}}</span><span style="font-size: 12px; color: #5C6667">{{pv.readSub}}</span></div>
+<div style="flex: 1; min-height: 0; display: flex; align-items: center; gap: 10px">
+<div style="position: relative; width: 156px; height: 156px; flex: none">
+<svg width="156" height="156" viewBox="0 0 150 150" role="img" aria-label="{{pv.ringAria}}" style="display: block">
+<sc-for list="{{pv.segs}}" as="s" hint-placeholder-count="30"><rect class="seg {{s.cls}}" x="70.8" y="9" width="8.4" height="12" rx="2.8" transform="{{s.rot}}" fill="{{s.fill}}" fill-opacity="{{s.fo}}" style="animation-delay: {{s.delay}}"></rect></sc-for>
+</svg>
+<div style="position: absolute; inset: 0; padding: 0 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1px">
+<span style="font-size: 36px; font-weight: 600; line-height: 1; letter-spacing: -0.045em">{{pv.cBig}}</span>
+<span style="font-size: 11px; line-height: 1.25; color: #5C6667">{{pv.cLabel}}</span>
+</div>
+</div>
+<div role="group" aria-label="{{N.modelTypes}}" style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{pv.legend}}" as="l" hint-placeholder-count="3">
+<button class="ring-btn" aria-pressed="{{l.pressed}}" onClick="{{l.pick}}" style="height: 48px; padding: 0 12px; border: 0; border-radius: 16px; background: {{l.bg}}; box-shadow: {{l.ring}}; color: #1B2224; display: flex; align-items: center; gap: 9px; text-align: left">
+<span aria-hidden="true" style="width: 10px; height: 10px; flex: none; border-radius: 50%; background: {{l.color}}"></span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{l.label}}</span><span style="font-size: 11px; color: #5C6667">{{l.sub}}</span></span>
+<span style="font-size: 19px; font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums">{{l.n}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+<p class="ns" style="flex: none; margin: 0; height: 50px; overflow-y: auto; font-size: 11.5px; line-height: 1.45; color: #5C6667">{{pv.names}}</p>
+</section>
+<div role="group" aria-label="{{N.remind}}" style="flex: none; padding: 4px 4px 4px 16px; border-radius: 26px; background: #FFFFFF; display: flex; align-items: center; gap: 6px">
+<span style="flex: 1; font-size: 13px; color: #5C6667">{{N.remindShort}}</span>
+<sc-for list="{{pv.remind}}" as="r" hint-placeholder-count="4"><button class="press" aria-pressed="{{r.pressed}}" onClick="{{r.pick}}" style="height: 40px; padding: 0 13px; border: 0; border-radius: 20px; background: {{r.bg}}; color: {{r.fg}}; font-size: 13px; font-weight: 600">{{r.label}}</button></sc-for>
+</div>
+<!--SWIPE-->
+</main>
+</sc-if>
+
+<!-- ============================== Settings ============================== -->
+<sc-if value="{{scr.settings}}" hint-placeholder-val="{{false}}">
+<main aria-label="{{N.settings}}" style="position: absolute; inset: 0; box-sizing: border-box; padding: 8px; background: #EFEEE9; display: flex; flex-direction: column; gap: 8px">
+<header data-tauri-drag-region style="flex: none; height: 52px; padding: 6px 0 0 6px; display: flex; align-items: center; gap: 12px">
+<button class="press" aria-label="{{N.back}}" onClick="{{gv.back}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 50%; background: rgba(27,34,36,0.07); color: #1B2224; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12H3M8 7l-5 5 5 5"></path></svg></button>
+<span data-tauri-drag-region style="flex: 1; font-size: 16px; font-weight: 600">{{N.settings}}</span>
+<!--WINCTL-->
+</header>
+<section aria-live="polite" style="flex: none; padding: 2px 12px 4px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px">{{L.credit1}}</span>
+<span style="font-size: 72px; font-weight: 500; line-height: 0.95; letter-spacing: -0.055em; white-space: nowrap">{{gv.rate}}<span style="font-size: 30px; letter-spacing: -0.02em"> {{gv.sym}}</span></span>
+<span style="font-size: 14px; color: #5C6667">{{gv.planLine}}</span>
+</section>
+<div role="group" aria-label="{{L.plan}}" style="flex: none; padding: 4px; border-radius: 26px; background: #FFFFFF; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px">
+<sc-for list="{{gv.plans}}" as="p" hint-placeholder-count="3"><button class="press" aria-pressed="{{p.pressed}}" onClick="{{p.pick}}" style="height: 44px; border: 0; border-radius: 22px; background: {{p.bg}}; color: {{p.fg}}; font-size: 14px; font-weight: 600">{{p.label}}</button></sc-for>
+</div>
+<div class="ns" style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px">
+<section aria-label="{{N.interface}}" style="flex: none; padding: 4px 8px 4px 16px; border-radius: 28px; background: #FFFFFF">
+<sc-for list="{{gv.rows}}" as="r" hint-placeholder-count="3">
+<div role="group" aria-label="{{r.label}}" style="min-height: 52px; display: flex; align-items: center; gap: 6px; border-top: {{r.line}}">
+<span style="flex: 1; font-size: 14px">{{r.label}}</span>
+<sc-for list="{{r.opts}}" as="o" hint-placeholder-count="3"><button class="press" aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="min-width: 44px; height: 38px; padding: 0 12px; border: 0; border-radius: 19px; background: {{o.bg}}; color: {{o.fg}}; font-size: 13px; font-weight: 600">{{o.label}}</button></sc-for>
+</div>
+</sc-for>
+<sc-if value="{{gv.showFx}}" hint-placeholder-val="{{false}}"><div style="min-height: 52px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ECEFEA">
+<label for="fx-fx" style="flex: 1; font-size: 14px">{{gv.fxLabel}}</label>
+<input id="fx-fx" class="fx-in" type="text" inputmode="decimal" value="{{gv.fxVal}}" onChange="{{gv.setFx}}" style="width: 100px; height: 38px; box-sizing: border-box; padding: 0 14px; border-radius: 19px; background: #F0F2EE; font-size: 14px; font-weight: 600; text-align: right; color: #1B2224">
+</div></sc-if>
+</section>
+<section aria-label="{{N.receiptSettings}}" style="flex: none; padding: 14px 16px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; letter-spacing: 0.02em">{{N.inInvoice}}</span>
+<input class="fx-in" aria-label="{{L.brandPh}}" placeholder="{{L.brandPh}}" value="{{gv.brand}}" onChange="{{gv.setBrand}}" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 22px; background: #F0F2EE; font-size: 14px; color: #1B2224">
+<input class="fx-in" aria-label="{{L.contactPh}}" placeholder="{{L.contactPh}}" value="{{gv.sign}}" onChange="{{gv.setSign}}" style="height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 22px; background: #F0F2EE; font-size: 14px; color: #1B2224">
+<span style="font-size: 12px; line-height: 1.45; color: #5C6667">{{L.rcHint}}</span>
+</section>
+</div>
+<div style="flex: none; padding: 8px 8px 8px 20px; border-radius: 30px; background: #1D2527; color: #FFFFFF; display: flex; align-items: center; gap: 12px">
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{ver.title}}</span><span style="font-size: 12px; color: #B8C2BF">{{ver.note}}</span></span>
+<button class="press" onClick="{{ver.check}}" disabled="{{ver.busy}}" style="flex: none; height: 44px; padding: 0 18px; border: 0; border-radius: 22px; background: #C6F36E; color: #1B2224; font-size: 14px; font-weight: 600">{{ver.label}}</button>
+</div>
+</main>
+</sc-if>
+
+<!-- ============================== Receipt ============================== -->
+<sc-if value="{{scr.receipt}}" hint-placeholder-val="{{false}}">
+<main aria-label="{{L.rcAria}}" style="position: absolute; inset: 0; z-index: 30; background: #1A1F27; animation: {{rcAnim}}">
+<button class="press" aria-label="{{N.back}}" onClick="{{rv.back}}" style="position: absolute; top: 6px; left: 8px; z-index: 5; width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: #C8D1D9; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12H3M8 7l-5 5 5 5"></path></svg></button>
+<div data-tauri-drag-region style="position: absolute; top: 0; left: 40px; right: 100px; height: 34px"></div>
+<div style="position: absolute; top: 2px; right: 6px; z-index: 5; display: flex; color: #C8D1D9"><!--WINCTL--></div>
+<div aria-hidden="true" style="position: absolute; top: 40px; left: 22px; right: 22px; height: 36px; border-radius: 18px; background: #232932">
+<span style="position: absolute; left: 20px; right: 20px; top: 16px; height: 4px; border-radius: 2px; background: #000000; box-shadow: 0 0 14px rgba(200,242,92,0.8), inset 0 0 0 1px rgba(200,242,92,0.7)"></span>
+<span class="led" style="position: absolute; right: 10px; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: #C8F25C"></span>
+</div>
+<div class="ns" style="position: absolute; top: 58px; left: 32px; right: 32px; bottom: 124px; overflow-y: auto">
+<!--RECEIPT-->
+</div>
+<div class="fadeup" style="position: absolute; left: 20px; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; animation-delay: .9s">
+<sc-if value="{{rv.sendOpen}}" hint-placeholder-val="{{false}}">
+<div class="fadeup" role="group" aria-label="{{L.howSend}}" style="display: flex; gap: 6px">
+<button class="press" onClick="{{rv.sendTg}}" style="flex: 1; height: 46px; border: 0; border-radius: 23px; background: #FAFCFB; color: #16203A; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 14px; font-weight: 500"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"></path><path d="M9 13l12-9"></path></svg>Telegram</button>
+<button class="press" onClick="{{rv.sendLink}}" style="flex: 1; height: 46px; border: 0; border-radius: 23px; background: #FAFCFB; color: #16203A; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 14px; font-weight: 500"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"></path><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"></path></svg>{{L.link}}</button>
+<button class="press" onClick="{{rv.sendPdf}}" style="flex: 1; height: 46px; border: 0; border-radius: 23px; background: #FAFCFB; color: #16203A; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 14px; font-weight: 500"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M9 13h6M9 17h4"></path></svg>PDF</button>
+</div>
+</sc-if>
+<div style="display: flex; gap: 8px">
+<button class="press go" aria-expanded="{{rv.sendStr}}" onClick="{{rv.toggleSend}}" style="flex: 1; height: 60px; padding: 0 8px 0 22px; border: 0; border-radius: 30px; background: #C8F25C; color: #16203A; display: flex; align-items: center; justify-content: space-between; font-size: 16px; font-weight: 600; white-space: nowrap">{{L.sendClient}}<span class="arr" aria-hidden="true" style="width: 44px; height: 44px; border-radius: 50%; background: #16203A; color: #C8F25C; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"></path></svg></span></button>
+<button class="press" onClick="{{rv.edit}}" aria-label="{{L.editCalc}}" style="width: 60px; height: 60px; flex: none; border: 0; border-radius: 50%; background: #FAFCFB; color: #16203A; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg></button>
+<button class="press" onClick="{{rv.done}}" style="height: 60px; padding: 0 18px; border: 0; border-radius: 30px; background: #FAFCFB; color: #16203A; font-size: 16px; font-weight: 500; white-space: nowrap">{{L.done}}</button>
+</div>
+</div>
+</main>
+</sc-if>
+
+<!-- ============================== Global layers ============================== -->
+<sc-if value="{{sw.show}}" hint-placeholder-val="{{false}}">
+<div aria-hidden="true" style="position: absolute; right: 14px; bottom: 14px; z-index: 50; width: 64px; height: 64px; border-radius: 50%; background: {{sw.acc}}; pointer-events: none; transform: scale({{sw.wave}}); transition: {{sw.trWave}}"></div>
+<sc-if value="{{sw.done}}" hint-placeholder-val="{{false}}"><div role="status" class="swfade" style="position: absolute; inset: 0; z-index: 51; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; color: #1D2527; font-size: 20px; font-weight: 600"><span aria-hidden="true" style="width: 56px; height: 56px; border-radius: 50%; background: #1D2527; color: {{sw.acc}}; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>{{sw.doneText}}</div></sc-if>
+</sc-if>
+
+<sc-if value="{{upd.show}}" hint-placeholder-val="{{false}}">
+<div role="status" class="fadeup" style="position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 55; height: 48px; box-sizing: border-box; padding: 0 6px 0 16px; border-radius: 24px; background: #1D2527; color: #FFFFFF; box-shadow: 0 12px 30px rgba(0,0,0,0.28); display: flex; align-items: center; gap: 8px; font-size: 14px"><span style="flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{upd.text}}</span><button class="press" onClick="{{upd.later}}" style="height: 36px; padding: 0 10px; border: 0; border-radius: 18px; background: transparent; color: #B8C2BF; font-size: 13px">{{upd.laterLabel}}</button><button class="press" onClick="{{upd.install}}" disabled="{{upd.busy}}" style="height: 36px; padding: 0 16px; border: 0; border-radius: 18px; background: #C6F36E; color: #1D2527; font-size: 13px; font-weight: 600">{{upd.installLabel}}</button></div>
+</sc-if>
+
+<div role="status" aria-live="polite" style="position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 60; box-sizing: border-box; min-height: 48px; padding: 6px 8px 6px 18px; border-radius: 24px; background: #FFFFFF; color: #1B2224; box-shadow: 0 12px 30px rgba(0,0,0,0.22), 0 0 0 1px rgba(27,34,36,0.06); display: flex; align-items: center; gap: 10px; font-size: 14px; transform: translateY({{toastY}}); opacity: {{toastOp}}; visibility: {{toastVis}}; transition: transform .4s cubic-bezier(.2,.8,.2,1), opacity .3s ease, visibility 0s linear {{toastVisDelay}}">
+<span aria-hidden="true" style="width: 8px; height: 8px; flex: none; border-radius: 50%; background: #84CC2E"></span>
+<span style="flex: 1; min-width: 0">{{toast}}</span>
+<sc-if value="{{hasUndo}}" hint-placeholder-val="{{false}}"><button class="press" onClick="{{undo}}" style="height: 34px; padding: 0 14px; border: 0; border-radius: 17px; background: #C6F36E; color: #1D2527; font-size: 13px; font-weight: 600">{{L.undo}}</button></sc-if>
+</div>
+</div>
+</x-dc>

@@ -1,10 +1,12 @@
 # TokensTab — desktop app (Windows, Tauri 2)
 
-Higgsfield credit calculator: generation costs, markup, client receipts. UI in Russian and English (RU / EN button in the header; the first start follows the Windows language).
+Higgsfield credit calculator: generation costs, markup, client receipts. UI in Russian and English (switch in Settings; the first start follows the Windows language). The window can be stretched vertically: only the items list grows.
 
 ## How it works
-- `design/App.dc.html` — the approved design. The app UI is rendered straight from it.
-- `tools/build-ui.js` turns the design into `src/app.gen.js` and `src/app.css` and adds the desktop bits: window dragging, always-on-top, minimize, close, language switch, receipt QR, PDF button, update banner.
+- `ui/app.html` — the app UI: all six screens (estimate, new item, invoice, history, prices, settings), authored from the canvas design.
+- `design/App.dc.html` — the logic class (catalog, pricing, tax, receipts) and the receipt markup shared by the app and the web viewer.
+- `tools/build-ui.js` joins `ui/app.html`, the receipt markup, the window buttons and the swipe button into `src/app.gen.js` and `src/app.css`.
+- `src/view.js` — turns the app state into what the screens show (view-models), including the swipe button and the price-update ring.
 - `src/dc-runtime.js` — a small Preact-based engine that renders the design template (`{{…}}`, `sc-for`, `sc-if`, events).
 - `src/main.js` — startup, saving calculations and settings in `localStorage`, link to the Tauri window, extension status, receipt link / PDF / Telegram, auto-update.
 - `src-tauri/` — the Tauri shell: frameless 420×800 always-on-top window, local bridge for the extension, PDF export via Microsoft Edge, updater.
@@ -18,7 +20,7 @@ npm run dev        # run the app in development mode
 npm run build      # src-tauri/target/release/tokenstab.exe and the installer in src-tauri/target/release/bundle/nsis/
 ```
 
-Changed the design? Copy the new `App.dc.html` into `design/` and rebuild — `build-ui` runs automatically before `dev` and `build`.
+Changed a screen? Edit `ui/app.html` (markup) or `src/view.js` (data) and rebuild — `build-ui` runs automatically before `dev` and `build`.
 
 ## Releases and auto-update
 1. Bump `version` in `src-tauri/tauri.conf.json`.

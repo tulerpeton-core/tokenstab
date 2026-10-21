@@ -1,39 +1,46 @@
-// Converts design/App.dc.html (the approved design) into src/app.gen.js for the desktop app.
+// Builds the app UI:  ui/app.html (the new design, all screens) + design/App.dc.html (logic class + receipt markup)
+//   -> src/app.gen.js (template + logic class) and src/app.css (styles).
 const fs = require('fs');
 const path = require('path');
 const root = path.join(__dirname, '..');
-let html = fs.readFileSync(path.join(root, 'design', 'App.dc.html'), 'utf8');
+const oldDesign = fs.readFileSync(path.join(root, 'design', 'App.dc.html'), 'utf8');
+let ui = fs.readFileSync(path.join(root, 'ui', 'app.html'), 'utf8');
 
-function rep(a, b) { const n = html.split(a).length - 1; if (n !== 1) throw new Error('build-ui: expected 1 match, got ' + n + ' for ' + a.slice(0, 80)); html = html.split(a).join(b); }
+function must(cond, msg) { if (!cond) throw new Error('build-ui: ' + msg); }
 
-// Desktop window controls: drag region and the header buttons.
-rep('<header style="height: 40px;', '<header data-tauri-drag-region style="height: 40px;');
-rep('<button class="ib" aria-label="{{L.pin}}" aria-pressed="true"', '<button class="ib" aria-label="{{L.pin}}" aria-pressed="{{pinPressed}}" onClick="{{winPin}}"');
-// Language switch next to the theme button: always visible, one click RU ↔ EN.
-rep('<button class="ib" aria-label="{{themeLabel}}" onClick="{{toggleTheme}}"', '<button class="ib" aria-label="{{langSwitchAria}}" title="{{langSwitchAria}}" onClick="{{toggleLang}}" style="height: 36px; padding: 0 9px; border: 0; border-radius: 18px; background: transparent; color: {{t.ink}}; font-size: 13px; font-weight: 600; letter-spacing: 0.04em">{{langShort}}</button>\n<button class="ib" aria-label="{{themeLabel}}" onClick="{{toggleTheme}}"');
-rep('<button class="ib" aria-label="{{L.minimize}}"', '<button class="ib" aria-label="{{L.minimize}}" onClick="{{winMin}}"');
-rep('<button class="ib" aria-label="{{L.close}}" style="width: 32px; height: 36px;', '<button class="ib" aria-label="{{L.close}}" onClick="{{winClose}}" style="width: 32px; height: 36px;');
-
-// Receipt QR: drawn from the real receipt link instead of the design's static sample.
-html = html.replace(/<svg role="img" aria-label="\{\{L\.qrAria\}\}" width="64" height="64" viewBox="-1\.5 -1\.5 32 32"([^>]*)><rect x="-1\.5" y="-1\.5" width="32" height="32" fill="#FFFEFB"><\/rect><path d="[^"]*" fill="#16203A"><\/path><\/svg>/,
+// ---- receipt: the same article markup the web viewer uses, with a live QR instead of the design's sample ----
+const oldBody = oldDesign.match(/<x-dc>([\s\S]*)<\/x-dc>/)[1];
+let article = oldBody.slice(oldBody.indexOf('<article class="print"'), oldBody.indexOf('</article>') + '</article>'.length);
+must(article.startsWith('<article'), 'receipt markup not found');
+article = article.replace(/<svg role="img" aria-label="\{\{L\.qrAria\}\}" width="64" height="64" viewBox="-1\.5 -1\.5 32 32"([^>]*)><rect x="-1\.5" y="-1\.5" width="32" height="32" fill="#FFFEFB"><\/rect><path d="[^"]*" fill="#16203A"><\/path><\/svg>/,
   (m, rest) => '<svg role="img" aria-label="{{L.qrAria}}" width="76" height="76" viewBox="{{qr.vb}}"' + rest + '><rect x="-2" y="-2" width="{{qr.box}}" height="{{qr.box}}" fill="#FFFEFB"></rect><path d="{{qr.d}}" fill="#16203A"></path></svg>');
-if (html.indexOf('{{qr.d}}') < 0) throw new Error('build-ui: receipt QR not found');
+must(article.indexOf('{{qr.d}}') >= 0, 'receipt QR not found');
 
-// "PNG" becomes "PDF".
-html = html.replace(/(<button class="press" onClick="\{\{sendPng\}\}"[^>]*>)<svg[\s\S]*?<\/svg>PNG<\/button>/,
-  '$1<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M9 13h6M9 17h4"></path></svg>PDF</button>');
-if (html.indexOf('</svg>PDF</button>') < 0) throw new Error('build-ui: PNG button not found');
+// ---- window buttons (pin, minimize, close) used in every header ----
+const wbtn = (aria, extra, svg) => `<button class="press" aria-label="${aria}" ${extra} style="width: 30px; height: 36px; border: 0; background: transparent; color: inherit; display: flex; align-items: center; justify-content: center">${svg}</button>`;
+const WIN = '<span style="display: flex; color: inherit">'
+  + wbtn('{{L.pin}}', 'aria-pressed="{{win.pinPressed}}" onClick="{{win.pin}}"', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity: {{win.pinOp}}"><path d="M9 3h6l-1 7 4 3H6l4-3z"></path><path d="M12 13v8"></path></svg>')
+  + wbtn('{{L.minimize}}', 'onClick="{{win.min}}"', '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>')
+  + wbtn('{{L.close}}', 'onClick="{{win.close}}"', '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>')
+  + '</span>';
 
-// Update banner above the editing banner.
-rep('<sc-if value="{{editing}}" hint-placeholder-val="{{false}}">',
-  '<sc-if value="{{upd.show}}" hint-placeholder-val="{{false}}">\n<div class="fadeup theme" role="status" style="flex: none; height: 44px; box-sizing: border-box; padding: 0 6px 0 16px; border-radius: 22px; background: #C8F25C; color: #16203A; display: flex; align-items: center; gap: 10px; font-size: 14px"><span style="flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{upd.text}}</span><button class="ib" onClick="{{upd.later}}" style="height: 34px; padding: 0 10px; border: 0; border-radius: 17px; background: transparent; color: #16203A; font-size: 13px">{{upd.laterLabel}}</button><button class="press" onClick="{{upd.install}}" disabled="{{upd.busy}}" style="height: 34px; padding: 0 14px; border: 0; border-radius: 17px; background: #16203A; color: #C8F25C; font-size: 13px; font-weight: 600">{{upd.installLabel}}</button></div>\n</sc-if>\n<sc-if value="{{editing}}" hint-placeholder-val="{{false}}">');
+// ---- swipe-to-confirm button: the dark bar at the bottom of the screens ----
+const SWIPE = `<div role="group" aria-label="{{sw.label}}" style="position: relative; flex: none; height: 76px; border-radius: 38px; background: #1D2527; overflow: hidden; user-select: none; -webkit-user-select: none; box-shadow: {{sw.barGlow}}; transition: box-shadow .3s ease">
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; bottom: 0; width: {{sw.fillW}}px; border-radius: 38px; background: {{sw.trail}}; opacity: {{sw.trailOp}}; transition: {{sw.trFill}}"></div>
+<sc-for list="{{sw.sparks}}" as="q" hint-placeholder-count="16"><span class="{{q.cls}}" aria-hidden="true" style="position: absolute; left: {{q.x}}px; top: {{q.y}}px; width: {{q.s}}px; height: {{q.s}}px; border-radius: 50%; background: {{sw.sparkColor}}; box-shadow: 0 0 8px 2px {{sw.sparkGlow}}; opacity: {{q.o}}; transform: scale({{q.sc}}); transition: opacity .3s ease, transform .3s ease; animation-delay: {{q.delay}}"></span></sc-for>
+<div aria-hidden="true" style="position: absolute; left: 82px; right: 20px; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 16px; opacity: {{sw.labelOp}}; filter: blur({{sw.labelBlur}}px); transform: translateX({{sw.labelX}}px); transition: {{sw.trLabel}}"><span class="swtext" style="background-image: {{sw.textGrad}}">{{sw.label}}</span><span style="display: flex; letter-spacing: 0.12em; color: {{sw.acc}}"><span class="swchev">›</span><span class="swchev">›</span><span class="swchev">›</span></span></div>
+<button aria-label="{{sw.label}}. {{N.swipeHint}}" onPointerDown="{{sw.down}}" onPointerMove="{{sw.move}}" onPointerUp="{{sw.up}}" onPointerCancel="{{sw.up}}" onClick="{{sw.click}}" style="position: absolute; top: 6px; left: {{sw.knobLeft}}; width: 64px; height: 64px; padding: 0; border: 0; border-radius: 50%; background: {{sw.knobBg}}; color: #1D2527; cursor: grab; touch-action: none; box-shadow: {{sw.knobShadow}}; transform: scale({{sw.knobScale}}); transition: {{sw.trKnob}}; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="{{sw.iconFill}}" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: translateX({{sw.arrowX}}px); transition: transform .2s ease"><path d="{{sw.iconPath}}"></path></svg>
+</button>
+</div>`;
 
-// App version and a manual update check at the bottom of Prices.
-rep('{{L.rcHint}}</span>\n</section>', '{{L.rcHint}}</span>\n</section>\n<section class="theme" style="padding: 14px 14px 14px 20px; border-radius: 28px; background: {{t.card}}; box-shadow: {{t.cardShadow}}; display: flex; align-items: center; gap: 12px"><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{ver.title}}</span><span style="font-size: 12px; color: {{t.muted}}">{{ver.note}}</span></span><button class="press theme" onClick="{{ver.check}}" disabled="{{ver.busy}}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 20px; background: {{t.soft}}; color: {{t.ink}}; font-size: 14px; font-weight: 500">{{ver.label}}</button></section>');
+ui = ui.split('<!--WINCTL-->').join(WIN).split('<!--SWIPE-->').join(SWIPE);
+must(ui.indexOf('<!--RECEIPT-->') >= 0, 'receipt placeholder missing');
+ui = ui.replace('<!--RECEIPT-->', () => article);
 
-const body = html.match(/<x-dc>([\s\S]*)<\/x-dc>/)[1];
-const code = html.match(/data-dc-script[^>]*>([\s\S]*?)<\/script>/)[1];
-const out = `// GENERATED by tools/build-ui.js from design/App.dc.html — do not edit by hand.
+const body = ui.match(/<x-dc>([\s\S]*)<\/x-dc>/)[1];
+const code = oldDesign.match(/data-dc-script[^>]*>([\s\S]*?)<\/script>/)[1];
+const out = `// GENERATED by tools/build-ui.js from ui/app.html and design/App.dc.html — do not edit by hand.
 import { DCLogic } from './dc-runtime.js';
 export const TEMPLATE = ${JSON.stringify(body)};
 ${code}
@@ -41,9 +48,9 @@ export { Component };
 `;
 fs.writeFileSync(path.join(root, 'src', 'app.gen.js'), out);
 
-// The design's <helmet> styles go to a real stylesheet: Tauri's CSP blocks <style> tags injected at runtime.
+// The <helmet> styles go to a real stylesheet: Tauri's CSP blocks <style> tags injected at runtime.
 const helmet = (body.match(/<helmet>([\s\S]*?)<\/helmet>/) || ['', ''])[1];
-const css = [...helmet.matchAll(/<style>([\s\S]*?)<\/style>/g)].map(m => m[1].trim()).join('\n');
-fs.writeFileSync(path.join(root, 'src', 'app.css'), '/* GENERATED by tools/build-ui.js from design/App.dc.html */\n' + css + '\n');
+const css = [...helmet.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1].trim()).join('\n');
+fs.writeFileSync(path.join(root, 'src', 'app.css'), '/* GENERATED by tools/build-ui.js from ui/app.html */\n' + css + '\n');
 console.log('src/app.css written,', css.length, 'bytes');
 console.log('src/app.gen.js written,', out.length, 'bytes');

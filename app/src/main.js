@@ -2,6 +2,7 @@ import { h, render } from './vendor/preact.module.js';
 import { parseTemplate } from './dc-runtime.js';
 import { TEMPLATE, Component as Design } from './app.gen.js';
 import { RECEIPT_BASE, CONFIGURED } from './release.gen.js';
+import { buildVals } from './view.js';
 
 // ---- receipt link: the receipt travels inside the link (#…), compressed; no server stores it ----
 function b64url(bytes) {
@@ -197,6 +198,16 @@ class App extends Design {
       .catch(() => this.showToast(this.ru() ? 'Нет связи с оболочкой приложения' : 'App backend is not available'));
   }
   ru() { return this.state.lang !== 'en'; }
+  openFolder() {
+    const ru = this.ru();
+    invoke('open_collector_folder').then(() => this.showToast(ru ? 'Папка открыта · загрузите её в chrome://extensions' : 'Folder opened · load it in chrome://extensions'))
+      .catch((p) => this.showToast((ru ? 'Папка расширения: ' : 'Extension folder: ') + p));
+  }
+  openHiggsfield() { invoke('open_higgsfield').catch(() => {}); }
+  stopScan() {
+    const ru = this.ru();
+    invoke('stop_scan').then(() => { this.setState({ ext: 'ready', scanIdx: 0 }); this.showToast(ru ? 'Обновление остановлено' : 'Update stopped'); }).catch(() => {});
+  }
   poll() {
     invoke('set_lang', { lang: this.state.lang }).catch(() => {});
     invoke('ext_status').then((st) => {
@@ -242,34 +253,12 @@ class App extends Design {
       if (!quiet) this.showToast(ru ? 'Цены обновлены · изменений: ' + changed.length : 'Prices updated · changes: ' + changed.length);
     }).catch(() => {});
   }
-  extraVals(v) {
+  extraVals() {
     const s = this.state, ru = this.ru();
-    const ext = Object.assign({}, v.ext);
     const toast = (m) => this.showToast(m);
-    const stop = () => invoke('stop_scan').then(() => { this.setState({ ext: 'ready', scanIdx: 0 }); toast(ru ? 'Обновление остановлено' : 'Update stopped'); }).catch(() => {});
-    if (s.ext === 'none') {
-      ext.text = ru
-        ? 'Сейчас цены из встроенного каталога. Расширение читает свежие цены прямо с сайта Higgsfield. Установка: откройте chrome://extensions, включите «Режим разработчика», нажмите «Загрузить распакованное» и выберите папку, которая откроется по кнопке.'
-        : 'Prices come from the built-in catalog. The extension reads fresh prices from the Higgsfield site. To install: open chrome://extensions, turn on Developer mode, press “Load unpacked” and pick the folder this button opens.';
-      ext.primaryLabel = ru ? 'Открыть папку расширения' : 'Open extension folder';
-      ext.primary = () => invoke('open_collector_folder')
-        .then(() => toast(ru ? 'Папка открыта · загрузите её в chrome://extensions' : 'Folder opened · load it in chrome://extensions'))
-        .catch((p) => toast((ru ? 'Папка расширения: ' : 'Extension folder: ') + p));
-    } else if (s.ext === 'noTab') {
-      ext.primary = () => invoke('open_higgsfield').catch(() => {});
-    } else if (s.ext === 'ready' || s.ext === 'done') {
-      ext.primary = () => this.startScan(false);
-      if (s.ext === 'done') ext.text = ru ? 'Каталог обновлён: изменений цен — ' + (s._changed || 0) + '.' : 'Catalog refreshed: price changes — ' + (s._changed || 0) + '.';
-    } else if (s.ext === 'scanning') {
-      ext.primary = stop;
-      ext.text = ru ? 'Держите вкладку Higgsfield открытой и видимой — скрытая вкладка сильно замедляет обновление.' : 'Keep the Higgsfield tab open and visible — a hidden tab slows the update down.';
-    } else if (s.ext === 'verify') {
-      ext.primary = () => this.startScan(true);
-      ext.secondary = stop;
-    }
     const qr = s.rcQr || { d: '', vb: '-2 -2 25 25', box: 25 };
     const upd = {
-      show: !!s.updVersion && s.updDismissed !== s.updVersion,
+      show: !!s.updVersion && s.updVersion !== s.appVer && s.updDismissed !== s.updVersion,
       text: (ru ? 'Доступна версия ' : 'Version ') + (s.updVersion || '') + (ru ? '' : ' is available'),
       busy: !!s.updBusy,
       installLabel: s.updBusy ? (ru ? 'Загружаю…' : 'Downloading…') : (ru ? 'Обновить' : 'Update'),
@@ -286,20 +275,13 @@ class App extends Design {
       busy: !!s.updChecking || !!s.updBusy,
       check: hasUpd ? upd.install : () => this.checkUpdate(true)
     };
-    return {
-      ext, qr, upd, ver,
-      sendTg: () => this.shareTelegram(),
-      sendLink: () => this.copyLink(),
-      sendPng: () => this.savePdf(),
-      changes: s.changesList || v.changes,
-      langShort: ru ? 'RU' : 'EN',
-      langSwitchAria: ru ? 'Switch to English' : 'Переключить на русский',
-      toggleLang: () => this.setState({ lang: ru ? 'en' : 'ru' }),
-      pinPressed: String(!!s.pinned),
-      winPin: () => { const p = !s.pinned; this.setState({ pinned: p }); const w = tauriWin(); if (w) w.setAlwaysOnTop(p).catch(() => {}); },
-      winMin: () => { const w = tauriWin(); if (w) w.minimize(); },
-      winClose: () => { const w = tauriWin(); if (w) w.close(); else window.close(); }
+    const win = {
+      pinPressed: String(!!s.pinned), pinOp: s.pinned ? 1 : 0.45,
+      pin: () => { const p = !s.pinned; this.setState({ pinned: p }); const w = tauriWin(); if (w) w.setAlwaysOnTop(p).catch(() => {}); },
+      min: () => { const w = tauriWin(); if (w) w.minimize(); },
+      close: () => { const w = tauriWin(); if (w) w.close(); else window.close(); }
     };
+    return Object.assign(buildVals(this), { qr, upd, ver, win });
   }
 }
 
