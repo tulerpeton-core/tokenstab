@@ -1,7 +1,7 @@
 {
   "name": "tokenstab",
-  "version": "0.2.0",
-  "description": "TokensTab — Higgsfield credit calculator (Windows, Tauri)",
+  "version": "0.2.1",
+  "description": "TokensTab â€” Higgsfield credit calculator (Windows, Tauri)",
   "scripts": {
     "build:ui": "node tools/build-ui.js",
     "serve": "node tools/serve.js",

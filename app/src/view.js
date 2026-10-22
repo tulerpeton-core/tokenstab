@@ -35,13 +35,13 @@ const N = {
     issue: 'Выставить счёт', saveChanges: 'Сохранить изменения', openingReceipt: 'Открываю чек', newCalc: 'Новый расчёт', startingNew: 'Начинаю новый расчёт', addToCalc: 'Добавить в расчёт', addingItem: 'Добавляю позицию',
     editingNo: 'Правка чека №', histEmpty: 'Выставленные счета появятся здесь. Любой можно открыть снова, изменить и отправить клиенту.', histNone: 'Ничего не нашлось. Проверьте имя клиента или номер счёта.',
     online: 'на связи', installed: 'установлено', notInstalled: 'не установлено', tabOpen: 'открыта', tabClosed: 'не открыта', appName: 'Приложение TokensTab', extName: 'Расширение Collector', tabName: 'Вкладка higgsfield.ai',
-    willRead: 'ЧТО БУДЕТ ПРОЧИТАНО', readDone: 'ПРОЧИТАНО', readAll: 'ЧТО ОБНОВИЛОСЬ', models: 'моделей', minShort: ' мин', left: 'осталось ~', ready: 'готово', going: 'идёт', waiting: 'ждёт',
+    willRead: 'ЧТО ОБНОВИТСЯ', readDone: 'ПРОЧИТАНО', readAll: 'ЧТО ОБНОВИЛОСЬ', models: 'моделей', minShort: ' мин', left: 'осталось ~', ready: 'готово', going: 'идёт', waiting: 'ждёт',
     hintTypes: 'Нажмите на тип, чтобы увидеть модели. Расширение читает цены со страницы Higgsfield с паузами 1–2 с и ничего не генерирует.',
     now: 'Сейчас: ', next: ' · дальше: ', keepVisible: '. Держите вкладку Higgsfield видимой.',
-    noteNone: 'Расширение не установлено — пока цены из встроенного каталога', noteNoTab: 'Откройте higgsfield.ai в браузере и войдите в аккаунт', noteReady: 'можно обновить цены', noteStale: 'без обновления — пора обновить',
-    noteDone: 'цены свежие · изменений: ', noteVerify: 'Пройдите проверку во вкладке Higgsfield и потяните «Продолжить»',
+    noteNone: 'Расширение не установлено — пока цены из встроенного каталога', noteNoTab: 'Откройте higgsfield.ai в браузере и войдите в аккаунт', noteReady: 'можно обновить цены', noteStale: 'давно не обновлялись — пора обновить',
+    noteDone: 'цены свежие · изменений: ', noteFresh: 'цены свежие, каталог обновлён', noteVerify: 'Пройдите проверку во вкладке Higgsfield и потяните «Продолжить»',
     openingFolder: 'Открываю папку', openingHf: 'Открываю Higgsfield', startingScan: 'Запускаю обновление', stoppingScan: 'Останавливаю', resuming: 'Продолжаю',
-    sym: { USD: '$', EUR: '€', RUB: '₽' }, rateIn: 'Курс · 1 $ =', rateOut: 'Курс', light: 'Светлая', dark: 'Тёмная'
+    sym: { USD: '$', EUR: '€', RUB: '₽' }, rateIn: 'Курс: 1 $ в', rateOut: 'Курс', light: 'Светлая', dark: 'Тёмная'
   },
   en: {
     calcAria: 'Estimate', history: 'Invoice history', settings: 'Settings', client: 'Client', clientPh: 'Client name', totalAria: 'Total', toPay: 'Total due',
@@ -58,19 +58,19 @@ const N = {
     issue: 'Issue invoice', saveChanges: 'Save changes', openingReceipt: 'Opening the receipt', newCalc: 'New estimate', startingNew: 'Starting a new estimate', addToCalc: 'Add to estimate', addingItem: 'Adding the item',
     editingNo: 'Editing invoice #', histEmpty: 'Issued invoices appear here. Open any of them again, edit it and send it to the client.', histNone: 'Nothing found. Check the client name or the invoice number.',
     online: 'connected', installed: 'installed', notInstalled: 'not installed', tabOpen: 'open', tabClosed: 'not open', appName: 'TokensTab app', extName: 'Collector extension', tabName: 'higgsfield.ai tab',
-    willRead: 'WILL BE READ', readDone: 'READ', readAll: 'WHAT WAS UPDATED', models: 'models', minShort: ' min', left: '~', ready: 'done', going: 'reading', waiting: 'waiting',
+    willRead: 'WHAT GETS UPDATED', readDone: 'READ', readAll: 'WHAT WAS UPDATED', models: 'models', minShort: ' min', left: '~', ready: 'done', going: 'reading', waiting: 'waiting',
     hintTypes: 'Tap a type to see its models. The extension reads prices from the Higgsfield page with 1–2 s pauses and never generates anything.',
     now: 'Now: ', next: ' · next: ', keepVisible: '. Keep the Higgsfield tab visible.',
     noteNone: 'Extension not installed — prices come from the built-in catalog', noteNoTab: 'Open higgsfield.ai in your browser and sign in', noteReady: 'ready to update prices', noteStale: 'not updated — time to refresh',
-    noteDone: 'prices are fresh · changes: ', noteVerify: 'Pass the check in the Higgsfield tab, then swipe “Continue”',
+    noteDone: 'prices are fresh · changes: ', noteFresh: 'prices are fresh, catalog updated', noteVerify: 'Pass the check in the Higgsfield tab, then swipe “Continue”',
     openingFolder: 'Opening the folder', openingHf: 'Opening Higgsfield', startingScan: 'Starting the update', stoppingScan: 'Stopping', resuming: 'Resuming',
-    sym: { USD: '$', EUR: '€', RUB: '₽' }, rateIn: 'Rate · 1 $ =', rateOut: 'Rate', light: 'Light', dark: 'Dark'
+    sym: { USD: '$', EUR: '€', RUB: '₽' }, rateIn: 'Rate: 1 $ in', rateOut: 'Rate', light: 'Light', dark: 'Dark'
   }
 };
 
-// Slider geometry: the fill is clipped to the thumb centre (thumb 18 px), so the gradient shows more of its saturated end the further it goes.
-const clipOf = (f) => 'inset(0 calc((100% - 18px) * ' + (1 - f) + ' + 9px) 0 0 round 5px)';
-const leftOf = (f) => 'calc((100% - 18px) * ' + f + ')';
+// Slider geometry: the fill is clipped to the thumb centre (thumb 16 px), so the gradient shows more of its saturated end the further it goes.
+const clipOf = (f) => 'inset(0 calc((100% - 16px) * ' + (1 - f) + ' + 8px) 0 0 round 4.25px)';
+const leftOf = (f) => 'calc((100% - 16px) * ' + f + ')';
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
 export function buildVals(app) {
@@ -108,16 +108,17 @@ export function buildVals(app) {
     app.setState((st) => {
       if (st.editingNo) {
         const rc = app.snapshot(st, st.editingNo, true);
-        return { receipt: rc, saved: st.saved.map((x) => (x.no === st.editingNo ? rc : x)), editingNo: null, preEdit: null, send: false, closing: false, sheet: false, provOpen: false };
+        return { receipt: rc, rcFresh: true, saved: st.saved.map((x) => (x.no === st.editingNo ? rc : x)), editingNo: null, preEdit: null, send: false, closing: false, sheet: false, provOpen: false };
       }
       const rc = app.snapshot(st);
-      return { receipt: rc, saved: [rc].concat(st.saved), no: st.no + 1, send: false, closing: false, sheet: false, provOpen: false };
+      return { receipt: rc, rcFresh: true, saved: [rc].concat(st.saved), no: st.no + 1, send: false, closing: false, sheet: false, provOpen: false };
     });
   };
   const closeReceipt = () => {
     set({ closing: true });
     clearTimeout(app._ct);
-    app._ct = setTimeout(() => { set({ receipt: null, closing: false, send: false }); toast(app.dict(app.state.lang).savedHist); }, 380);
+    const fresh = !!app.state.rcFresh;
+    app._ct = setTimeout(() => { set({ receipt: null, rcFresh: false, closing: false, send: false }); if (fresh) toast(app.dict(app.state.lang).savedHist); }, 380);
   };
   const startEdit = (h) => {
     app.setState((st) => ({
@@ -174,7 +175,7 @@ export function buildVals(app) {
     };
   });
   const cv = {
-    noLabel: (s.editingNo ? L.invoice + ' ' + L.noSign + s.editingNo : L.invoice + ' ' + L.noSign + s.no) + ' · ' + (ru ? 'клиент' : 'client'),
+    noLabel: L.invoice + ' ' + L.noSign + (s.editingNo || s.no) + (ru ? ' для' : ' for'),
     client: s.client, setClient: (e) => set({ client: e.target.value }),
     goHistory: () => go('history'), goSettings: () => go('settings'), goPrices: () => go('prices'),
     priceText: stale ? L.staleChip(s.days) : n.pricesFrom + updShort + n.refresh, dotColor: stale ? '#D8661E' : '#3DBE5A',
@@ -262,6 +263,7 @@ export function buildVals(app) {
 
   // ---------- Receipt ----------
   const rv = {
+    listBottom: s.send ? 180 : 124,
     back: closeReceipt, done: closeReceipt, edit: () => { if (s.receipt) startEdit(s.receipt); },
     sendOpen: !!s.send, sendStr: String(!!s.send), toggleSend: () => set({ send: !s.send }),
     sendTg: () => app.shareTelegram(), sendLink: () => app.copyLink(), sendPdf: () => app.savePdf()
@@ -280,7 +282,7 @@ export function buildVals(app) {
     rows: filtered.map((h, i) => {
       const v = app.rcView(h, L);
       return { no: h.no, client: v.client, meta: v.short + ' · ' + v.count + v.editedNote, sum: v.total, badge: h.edited ? '#FFE3D0' : '#EEF8D8', line: i ? '1px solid #ECEFEA' : '0',
-        aria: L.openRc + h.no + ' · ' + v.client, open: () => set({ receipt: h, send: false, closing: false }) };
+        aria: L.openRc + h.no + ' · ' + v.client, open: () => set({ receipt: h, rcFresh: false, send: false, closing: false }) };
     }),
     empty: filtered.length === 0, emptyText: nSaved === 0 ? n.histEmpty : n.histNone
   };
@@ -326,15 +328,15 @@ export function buildVals(app) {
   let kicker, big, bigUnit, note;
   if (E === 'scanning') { kicker = L.extScanT; big = Math.min(total, cur + 1) + ' / ' + total; bigUnit = ''; note = n.now + flat[cur].n + ' · ' + n.left + Math.max(1, Math.round((total - cur) * 0.5)) + n.minShort; }
   else if (E === 'verify') { kicker = L.extVerT; big = '!'; bigUnit = ''; note = n.noteVerify; }
-  else if (E === 'done') { kicker = L.extDoneT; big = '0'; bigUnit = daysWord(0); note = n.noteDone + (s._changed || 0); }
-  else { kicker = L.lastUpd(s.days, updShort); big = String(s.days); bigUnit = daysWord(s.days); note = E === 'none' ? n.noteNone : (E === 'noTab' ? n.noteNoTab : (stale ? n.noteStale : n.noteReady)); }
+  else if (E === 'done') { const ch = s._changed || 0; kicker = L.extDoneT; big = String(ch); bigUnit = ru ? pl(ch, 'изменение', 'изменения', 'изменений') : (ch === 1 ? 'change' : 'changes'); note = n.noteFresh; }
+  else { kicker = n.pricesFrom + updShort; big = String(s.days); bigUnit = daysWord(s.days); note = E === 'none' ? n.noteNone : (E === 'noTab' ? n.noteNoTab : (stale ? n.noteStale : n.noteReady)); }
   const chk = (ok, name, state) => ({ name, state, bg: ok ? '#E3F6CC' : '#FFE0CC', icon: ok ? 'M5 12l5 5 9-10' : 'M12 8v5M12 17h.01' });
   const pv = {
     back: () => go('calc'), kicker, big, bigUnit, note,
     checks: [chk(true, n.appName, n.online), chk(E !== 'none', n.extName, E !== 'none' ? n.installed : n.notInstalled), chk(E !== 'none' && E !== 'noTab', n.tabName, E !== 'none' && E !== 'noTab' ? n.tabOpen : n.tabClosed)]
       .map((x, i) => Object.assign(x, { line: i ? '1px solid #F0ECE6' : '0' })),
     readTitle: scanning ? n.readDone : (E === 'done' ? n.readAll : n.willRead),
-    readSub: scanning ? n.left + Math.max(1, Math.round((total - cur) * 0.5)) + n.minShort : '~' + Math.round(total * 0.5) + n.minShort,
+    readSub: scanning ? n.left + Math.max(1, Math.round((total - cur) * 0.5)) + n.minShort : '~' + KINDS.reduce((a, k) => a + MIN[k], 0) + n.minShort,
     ringAria: scanning ? (ru ? 'Прочитано ' + cur + ' из ' + total + ' моделей' : cur + ' of ' + total + ' models read') : total + ' ' + n.models,
     segs, legend, cBig, cLabel, names: pnames,
     remind: [3, 7, 14, 0].map((d) => ({ label: d ? L.remindLbl(d) : L.remindOff, pressed: String(s.remind === d), bg: s.remind === d ? '#1D2527' : '#F4F1EC', fg: s.remind === d ? '#FFFFFF' : '#1B2224', pick: () => set({ remind: d }) }))
@@ -355,7 +357,7 @@ export function buildVals(app) {
       { label: n.currency, opts: opts(s.cur, [['RUB', '₽'], ['USD', '$'], ['EUR', '€']], 'cur') },
       { label: n.markupMax, opts: [100, 200, 300, 500].map((m) => ({ label: m + '%', pick: () => set({ markupMax: m, markup: Math.min(s.markup, m) }), pressed: String(s.markupMax === m), bg: s.markupMax === m ? '#1D2527' : '#F0F2EE', fg: s.markupMax === m ? '#FFFFFF' : '#1B2224' })) }
     ].map((r, i) => Object.assign(r, { line: i ? '1px solid #ECEFEA' : '0' })),
-    showFx: s.cur !== 'USD', fxLabel: n.rateIn.replace('$', '$') + ' ' + n.sym[s.cur], fxVal: String(fx).replace('.', ru ? ',' : '.'),
+    showFx: s.cur !== 'USD', fxLabel: n.rateIn + ' ' + n.sym[s.cur], fxVal: String(fx).replace('.', ru ? ',' : '.'),
     setFx: (e) => { const v = parseFloat(String(e.target.value).replace(',', '.')); if (!isNaN(v) && v > 0) app.setState((st) => ({ fx: Object.assign({}, st.fx, { [st.cur]: v }) })); },
     brand: s.brand, setBrand: (e) => set({ brand: e.target.value }), sign: s.sign, setSign: (e) => set({ sign: e.target.value })
   };
@@ -404,13 +406,13 @@ function swipeVals(app, cfg) {
     show: !!cfg, label: (cfg && cfg.label) || '', doneText: (cfg && cfg.doneText) || '', done, acc: T.acc, knobBg: T.knob, textGrad: T.text, sparkColor: T.spark, sparkGlow: 'rgba(' + T.rgb + ',0.8)',
     trail: 'linear-gradient(90deg, rgba(' + T.rgb + ',0) 0%, rgba(' + T.rgb + ',0.38) 55%, rgba(' + T.rgb + ',0.95) 100%)',
     iconPath: SWIPE_ICON[icon], iconFill: icon === 'stop' ? 'currentColor' : 'none', sparks,
-    knobLeft: (6 + travel * p) + 'px', fillW: Math.round(kc), trailOp: p > 0.03 ? 1 : 0,
+    knobX: (travel * p).toFixed(1), trailR: Math.max(0, Math.round(W - kc)), trailOp: p > 0.03 ? 1 : 0,
     knobScale: drag ? (1.06 + 0.2 * v).toFixed(3) + ', ' + (1.06 - 0.1 * v).toFixed(3) : '1', arrowX: Math.round(p * 6 + v * 5),
     knobShadow: drag ? '0 0 0 6px rgba(' + T.rgb + ',0.25), 0 0 26px 6px rgba(' + T.rgb + ',0.55)' : (done ? '0 0 0 6px rgba(' + T.rgb + ',0.35)' : '0 2px 8px rgba(0,0,0,0.3)'),
     barGlow: drag ? '0 0 0 1px rgba(' + T.rgb + ',' + (0.15 + 0.4 * p).toFixed(2) + '), 0 0 ' + Math.round(10 + 22 * p) + 'px rgba(' + T.rgb + ',' + (0.12 + 0.3 * p).toFixed(2) + ')' : '0 0 0 0 rgba(' + T.rgb + ',0)',
-    labelOp: done ? 0 : Math.max(0, 1 - p * 1.8).toFixed(2), labelBlur: (p * 5).toFixed(1), labelX: Math.round(p * 40), wave: done ? 60 : 0,
-    trKnob: drag ? 'transform .12s ease, box-shadow .2s ease' : 'left .55s cubic-bezier(.34,1.56,.64,1), transform .3s ease, box-shadow .25s ease',
-    trFill: drag ? 'opacity .15s ease' : 'width .55s cubic-bezier(.34,1.56,.64,1), opacity .3s ease',
+    labelOp: done ? 0 : Math.max(0, 1 - p * 1.8).toFixed(2), labelBlur: (p * 3).toFixed(1), labelX: Math.round(p * 40), wave: done ? 60 : 0,
+    trKnob: drag ? 'box-shadow .2s ease' : 'transform .55s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease',
+    trFill: drag ? 'opacity .15s ease' : 'clip-path .55s cubic-bezier(.34,1.56,.64,1), opacity .3s ease',
     trLabel: drag ? 'none' : 'opacity .4s ease, transform .5s ease-out, filter .4s ease',
     trWave: done ? 'transform .8s cubic-bezier(.55,0,.2,1)' : 'transform .35s ease',
     down: (e) => {
@@ -422,12 +424,23 @@ function swipeVals(app, cfg) {
     },
     move: (e) => {
       if (!app.state.swd) return;
-      const dx = Math.abs(e.clientX - app._swL); app._swL = e.clientX;
-      const sv = Math.min(1, (0.5 * (app.state.swv || 0) * 18 + 0.5 * dx) / 18);
-      app.setState({ swv: sv, swp: clamp(app._swP + (e.clientX - app._swX) / app._swT, 0, 1) });
+      app._swPend = e.clientX;
+      if (app._swRaf) return;
+      // pointer events can fire several times per frame: render once per frame with the latest position
+      app._swRaf = requestAnimationFrame(() => {
+        app._swRaf = 0;
+        if (!app.state.swd) return;
+        const x = app._swPend;
+        const dx = Math.abs(x - app._swL); app._swL = x;
+        const sv = Math.min(1, (0.5 * (app.state.swv || 0) * 18 + 0.5 * dx) / 18);
+        app.setState({ swv: sv, swp: clamp(app._swP + (x - app._swX) / app._swT, 0, 1) });
+      });
     },
     up: () => {
       if (!app.state.swd) return;
+      cancelAnimationFrame(app._swRaf); app._swRaf = 0;
+      if (app._swPend != null) app.state.swp = clamp(app._swP + (app._swPend - app._swX) / app._swT, 0, 1);
+      app._swPend = null;
       if ((app.state.swp || 0) >= 0.85) finish(); else app.setState({ swd: false, swv: 0, swp: 0 });
     },
     // Enter / Space (detail 0) completes for keyboard users; a plain mouse click only nudges the knob as a hint.

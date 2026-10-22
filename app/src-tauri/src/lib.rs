@@ -323,6 +323,41 @@ fn open_share(url: String) -> Result<(), String> {
         .map_err(|e| e.to_string())
 }
 
+fn pct(s: &str) -> String {
+    let mut o = String::new();
+    for b in s.bytes() {
+        match b {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => o.push(b as char),
+            _ => o.push_str(&format!("%{:02X}", b)),
+        }
+    }
+    o
+}
+
+/// Shares an invoice to Telegram. With Telegram Desktop installed the chat picker opens with the whole
+/// formatted message (the receipt link at the end); without it the web share page gets the link and the text.
+#[tauri::command]
+fn share_telegram(text: String, link: String, link_line: String) -> Result<String, String> {
+    use std::os::windows::process::CommandExt;
+    let has_app = std::process::Command::new("reg")
+        .args(["query", r"HKCR\tg"])
+        .creation_flags(0x0800_0000) // CREATE_NO_WINDOW
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false);
+    let url = if has_app {
+        let full = if link.is_empty() { text } else { format!("{text}\n\n{link_line}") };
+        format!("tg://msg?text={}", pct(&full))
+    } else {
+        format!("https://t.me/share/url?url={}&text={}", pct(&link), pct(&text))
+    };
+    std::process::Command::new("rundll32")
+        .args(["url.dll,FileProtocolHandler", &url])
+        .spawn()
+        .map(|_| if has_app { "app".to_string() } else { "web".to_string() })
+        .map_err(|e| e.to_string())
+}
+
 // ---------- updates ----------
 
 #[tauri::command]
@@ -377,6 +412,7 @@ pub fn run() {
             save_receipt_pdf,
             reveal_file,
             open_share,
+            share_telegram,
             check_update,
             install_update
         ])

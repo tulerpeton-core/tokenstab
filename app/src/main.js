@@ -170,12 +170,33 @@ class App extends Design {
       const t = document.createElement('textarea'); t.value = link; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); done();
     });
   }
+  // A readable invoice as a Telegram message: groups, lines, total, who to contact; the receipt link goes last.
+  telegramText(rc) {
+    const L = this.dict(this.state.lang), ru = this.ru();
+    const v = this.rcView(rc, L);
+    const icon = { [L.grpVideo]: '🎬', [L.grpPhoto]: '🖼', [L.grpAudio]: '🎙' };
+    const date = new Date(rc.ts).toLocaleDateString(L.locale, { day: 'numeric', month: 'long', year: 'numeric' }).replace(' г.', '');
+    const out = ['🧾 ' + L.invoice + ' ' + v.noLabel + ' · ' + v.client, date, ''];
+    v.groups.forEach((g) => {
+      out.push((icon[g.label] || '•') + ' ' + g.label.toUpperCase() + (g.sub ? ' — ' + g.sub : ''));
+      g.lines.forEach((l) => out.push('• ' + l.name, '   ' + l.detail + ' = ' + l.sum));
+      out.push('');
+    });
+    out.push('━━━━━━━━━━━━', '💳 ' + L.toPay + ': ' + v.total);
+    const who = [(rc.brand || '').trim(), (rc.sign || '').trim()].filter(Boolean).join(' · ');
+    if (who) out.push('', (ru ? 'Спасибо! ' : 'Thank you! ') + who);
+    return out.join('\n');
+  }
   shareTelegram() {
-    const ru = this.ru(), link = this.state.rcLink;
-    if (!link) return;
-    if (!CONFIGURED) { this.showToast(ru ? 'Ссылки заработают после настройки GitHub' : 'Links will work once GitHub is set up'); return; }
-    const url = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent((ru ? 'Счёт ' : 'Invoice ') + this.state.rcShare);
-    invoke('open_share', { url }).then(() => this.showToast(ru ? 'Открываю Telegram — выберите получателя' : 'Opening Telegram — pick a chat')).catch(() => {});
+    const ru = this.ru(), rc = this.state.receipt;
+    if (!rc) return;
+    const link = CONFIGURED ? (this.state.rcLink || '') : '';
+    const linkLine = (ru ? '🔗 Чек онлайн: ' : '🔗 Online receipt: ') + link;
+    invoke('share_telegram', { text: this.telegramText(rc), link, linkLine })
+      .then((how) => this.showToast(how === 'app'
+        ? (ru ? 'Открываю Telegram — выберите чат' : 'Opening Telegram — pick a chat')
+        : (ru ? 'Telegram не найден — открываю веб-версию' : 'Telegram app not found — opening the web version')))
+      .catch(() => this.showToast(ru ? 'Не удалось открыть Telegram' : 'Could not open Telegram'));
   }
   componentWillUnmount() {
     clearInterval(this._poll); clearTimeout(this._upd0); clearInterval(this._upd);

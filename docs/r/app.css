@@ -18,21 +18,21 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #1D25
 .fx-cli{border:0;background:transparent;outline:none}
 .fx-cli:focus{box-shadow:0 2px 0 #1B2224}
 .fx-num{border:0;outline:none;-moz-appearance:textfield}.fx-num::-webkit-inner-spin-button{-webkit-appearance:none}
-.sl{position:relative;flex:1;min-width:0;height:10px;border-radius:5px;background:#ECEDF2}
+.sl{position:relative;flex:1;min-width:0;height:8.5px;border-radius:4.25px;background:#ECEDF2}
 .sl-v{--a:#F5F0FF;--b:#B293FF;--c:#6A38E6}
 .sl-o{--a:#FFF3E8;--b:#FFB685;--c:#FF6A1A}
 .sl input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
-.sl-fill{position:absolute;inset:0;border-radius:5px;overflow:hidden;pointer-events:none;background:linear-gradient(90deg,var(--a) 0%,var(--b) 50%,var(--c) 100%);transition:clip-path .18s ease-out}
-.sl-fill::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.95) 0 .75px,transparent 1.2px),radial-gradient(circle,rgba(255,255,255,.8) 0 .6px,transparent 1px),radial-gradient(circle,rgba(255,255,255,.95) 0 .9px,transparent 1.4px),radial-gradient(circle,rgba(255,255,255,.7) 0 .65px,transparent 1.1px);background-size:46px 10px,71px 10px,97px 10px,131px 10px;background-repeat:repeat-x;background-position:6px 3px,20px 7px,40px 4px,70px 6px;animation:slDrift 6s linear infinite}
-.sl-fill::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.42) 50%,transparent 65%);background-size:220% 100%;background-position:120% 0;animation:slSheen 3.4s ease-in-out infinite}
-.sl-thumb{position:absolute;top:-4px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(30,20,70,.28),0 0 0 1px rgba(30,20,70,.06);pointer-events:none;transition:left .18s ease-out}
+.sl-fill{position:absolute;inset:0;border-radius:4.25px;overflow:hidden;pointer-events:none;background:linear-gradient(90deg,var(--a) 0%,var(--b) 50%,var(--c) 100%);transition:clip-path .18s ease-out}
+.sl-fill::before{content:"";position:absolute;top:0;bottom:0;left:0;width:calc(100% + 120px);background-image:radial-gradient(circle,rgba(255,255,255,.95) 0 .7px,transparent 1.1px),radial-gradient(circle,rgba(255,255,255,.8) 0 .55px,transparent .95px),radial-gradient(circle,rgba(255,255,255,.9) 0 .8px,transparent 1.25px);background-size:120px 8.5px;background-repeat:repeat-x;background-position:6px -1.5px,46px 1.5px,86px 0;animation:slDrift 6s linear infinite;will-change:transform}
+.sl-fill::after{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-120%);animation:slSheen 3.4s ease-in-out infinite;will-change:transform}
+.sl-thumb{position:absolute;top:-3.75px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(30,20,70,.28),0 0 0 1px rgba(30,20,70,.06);pointer-events:none;transition:left .18s ease-out}
 .sl input:focus-visible~.sl-thumb{outline:2px solid #1D2527;outline-offset:2px}
 .fold{display:grid;transition:grid-template-rows .3s cubic-bezier(.2,.7,.2,1)}
 .seg{animation:segIn .5s ease-out both}
 .seg.cur{animation:segPulse 1.1s ease-in-out infinite}
 .ring-btn{transition:background .25s ease,box-shadow .25s ease}
 .swchev{animation:swchev 1.6s ease-in-out infinite}.swchev:nth-child(2){animation-delay:.18s}.swchev:nth-child(3){animation-delay:.36s}
-.swtext{background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:swtext 2.8s linear infinite}
+.swtext{background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:swtext 3.6s linear infinite}
 .swtw{animation:swtw 1s ease-in-out infinite alternate}
 .swfade{animation:swfade .4s ease .5s both}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -42,8 +42,8 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #1D25
 @keyframes led{to{opacity:.2}}
 @keyframes rcmark{from{background-size:0 42%}to{background-size:100% 42%}}
 @keyframes rcflow{0%{background-color:#22336E}40%{background-color:#3A64AE}70%{background-color:#5B8DEF}100%{background-color:#B8EC50}}
-@keyframes slDrift{from{background-position:6px 3px,20px 7px,40px 4px,70px 6px}to{background-position:-40px 3px,-51px 7px,-57px 4px,-61px 6px}}
-@keyframes slSheen{0%{background-position:120% 0}100%{background-position:-120% 0}}
+@keyframes slDrift{from{transform:translateX(0)}to{transform:translateX(-120px)}}
+@keyframes slSheen{from{transform:translateX(-120%)}to{transform:translateX(320%)}}
 @keyframes segIn{from{opacity:0}to{opacity:1}}
 @keyframes segPulse{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes swchev{0%,100%{opacity:.25}50%{opacity:1}}
